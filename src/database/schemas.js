@@ -1,4 +1,6 @@
-exports.init = (mongoose) => {
+'use strict';
+
+module.exports.init = (mongoose) => {
 
 	// User Data Schema
 

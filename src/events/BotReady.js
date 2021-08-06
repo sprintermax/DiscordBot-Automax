@@ -2,13 +2,11 @@
 
 const Config = require('../config.js');
 
-exports.defs = {
-	name: 'ready'
-}
-
-exports.run = async ({ DiscordJS, Client, Mongoose, Schemas }) => {
-
-	console.log(`[CONNECTION] O Bot está online em ${Client.guilds.size} Servidores pelo usuário "${Client.user.tag}" (${Client.user.id})`);
-	const InviteLink = Client.generateInvite({ scopes: ['bot'], permissions: Config.Discord.InvitePerms });
-	console.log(`[INFO] Link de convite do Bot: ${InviteLink}`);
+module.exports = {
+	name: 'ready',
+	run({ Client }) {
+		console.log(`[CONNECTION] O Bot está online em ${Client.guilds.cache.size} Servidor${Client.guilds.cache.size > 1 ? 'es' : ''} pelo usuário "${Client.user.tag}" (${Client.user.id})`);
+		const InviteLink = Client.generateInvite({ scopes: ['bot', 'applications.commands'], permissions: Config.Discord.InvitePerms });
+		console.log(`[INFO] Link de convite do Bot: ${InviteLink}\n`);
+	}
 }
