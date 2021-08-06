@@ -11,18 +11,8 @@ module.exports = {
 			}
 		]
 	},
-	async run({ DiscordJS, Interaction }) {
+	async run({ Interaction }) {
 		const user = Interaction.options.getUser('user') || Interaction.user;
-		await Interaction.reply({
-			embeds: [
-				new DiscordJS.MessageEmbed()
-					.setDescription(`**Aqui está, a imagem de perfil de <@${user.id}>:**`)
-					.setColor('#000000')
-					.setImage(user.avatarURL({ dynamic: true, size: 2048 }))
-					.setFooter(Interaction.guild.name, Interaction.guild.iconURL() || '')
-					.setTimestamp()
-			]
-		});
-
+		await Interaction.reply({ files: [user.avatarURL({ dynamic: true, size: 2048 })] });
 	}
 }

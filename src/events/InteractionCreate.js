@@ -9,8 +9,20 @@ module.exports = {
 				await Client.Commands.Interactions.get(Interaction.commandName)
 					.run({ DiscordJS, Client, Mongoose, Schemas, Interaction });
 			} catch (error) {
-				console.error(error);
-				await Interaction.reply({ content: 'Ocorreu um erro ao executar o comando!', ephemeral: true });
+				if (!Client.application?.owner) await Client.application?.fetch();
+				await Interaction.reply({
+					content: 'Ops! Ocorreu um erro inesperado.',
+					embeds: [
+						new DiscordJS.MessageEmbed()
+							.setTitle('Erro na Execução do Código')
+							.setDescription(`Se o problema persistir avise Sprintermax#0084\n\n\`${error.message}\``)
+							.setColor('#000000')
+							.addField('Saída do Console:', `\`\`\`${error.stack.length > 750 ? error.stack.substring(0, 750) + '\n[...]' : error.stack}\`\`\``)
+							.setFooter(`${Interaction.guild.name}`, Interaction.guild.iconURL() || '')
+							.setTimestamp()
+					],
+					ephemeral: true
+				});
 			}
 		}
 		if (Interaction.isButton()) { }

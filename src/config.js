@@ -4,6 +4,7 @@ const { Intents, Permissions } = require('discord.js');
 
 module.exports.Discord = {
 	ClientIntents: [
+		Intents.FLAGS.GUILDS,
 		Intents.FLAGS.GUILD_MESSAGES,
 		Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
 		Intents.FLAGS.DIRECT_MESSAGES,
