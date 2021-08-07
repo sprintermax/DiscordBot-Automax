@@ -18,7 +18,7 @@ module.exports = {
 							.setDescription(`Se o problema persistir avise Sprintermax#0084\n\n\`${error.message}\``)
 							.setColor('#000000')
 							.addField('Saída do Console:', `\`\`\`${error.stack.length > 750 ? error.stack.substring(0, 750) + '\n[...]' : error.stack}\`\`\``)
-							.setFooter(`${Interaction.guild.name}`, Interaction.guild.iconURL() || '')
+							.setFooter(`${Interaction.guild?.name || Client.user.username}`, Interaction.guild?.iconURL() || Client.user.avatarURL() || '')
 							.setTimestamp()
 					],
 					ephemeral: true

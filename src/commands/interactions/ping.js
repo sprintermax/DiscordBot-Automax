@@ -15,7 +15,7 @@ module.exports = {
 					.addField('Latência do Bot:', Math.floor(PastMiliseconds) + 'ms', true)
 					.addField('\u200b', '\u200b', true)
 					.addField('Latência da API:', Math.round(Client.ws.ping) + 'ms', true)
-					.setFooter(`${Interaction.guild.name}`, Interaction.guild.iconURL() || '')
+					.setFooter(`${Interaction.guild?.name || Client.user.username}`, Interaction.guild?.iconURL() || Client.user.avatarURL() || '')
 					.setTimestamp()
 			]
 		});
