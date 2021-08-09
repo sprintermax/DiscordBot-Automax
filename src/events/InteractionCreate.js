@@ -13,6 +13,7 @@ module.exports = {
 				if (!Client.application?.owner) await Client.application?.fetch();
 				await Interaction.editReply({
 					content: 'Ops! Ocorreu um erro inesperado.',
+					components: [],
 					embeds: [
 						new DiscordJS.MessageEmbed()
 							.setTitle('Erro na Execução do Código')
@@ -21,8 +22,7 @@ module.exports = {
 							.addField('Saída do Console:', `\`\`\`${error.stack.length > 750 ? error.stack.substring(0, 750) + '\n[...]' : error.stack}\`\`\``)
 							.setFooter(`${Interaction.guild?.name || Client.user.username}`, Interaction.guild?.iconURL() || Client.user.avatarURL() || '')
 							.setTimestamp()
-					],
-					components: []
+					]
 				});
 			}
 		}

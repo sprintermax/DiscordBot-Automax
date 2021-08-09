@@ -11,23 +11,16 @@ module.exports.ConvertComponentType = (type, method) => {
 }
 
 module.exports.UpdateComponents = (components, method, i) => {
-	for (const index0 in components) {
-		if (components[index0].type === 'ACTION_ROW') for (const index1 in components[index0].components) EditComponent(components[index0].components[index1]);
+	for (const component0 of components) {
+		if (component0.type === 'ACTION_ROW') for (const component1 of component0.components) EditComponent(component1);
 
 		function EditComponent(component) {
 			if (['LOAD_OPTIONS', 'MIXED'].includes(method)) {
-				if (component.type === 'BUTTON' && i.componentType === 'BUTTON') {
-					const buttonindex = components[index0].components.findIndex(button => button.customId === i.customId);
-					if (buttonindex !== -1)
-						if (i.customId === component.customId) component.disabled = true
-						else component.disabled = false;
-				}
-				if (component.type === 'SELECT_MENU' && i.componentType === 'SELECT_MENU') for (const index in component.options) {
-					const menuindex = components[index0].components.findIndex(menu => menu.customId === i.customId);
-					if (i.values.includes(component.options[index].value)) {
-						if (menuindex !== -1) component.options[index].default = true
-					} else if (menuindex !== -1) component.options[index].default = false
-				}
+				if (component.type === 'BUTTON' && i.componentType === 'BUTTON' && component0.components.findIndex(button => button.customId === i.customId) !== -1)
+					component.customId === i.customId ? component.disabled = true : component.disabled = false;
+
+				if (component.type === 'SELECT_MENU' && i.componentType === 'SELECT_MENU' && component0.components.findIndex(menu => menu.customId === i.customId) !== -1)
+					for (const menuitem of component.options) i.values.includes(menuitem.value) ? menuitem.default = true : menuitem.default = false;
 			}
 			if (['DISABLE_ALL', 'MIXED'].includes(method)) component.disabled = true;
 		}
@@ -36,12 +29,23 @@ module.exports.UpdateComponents = (components, method, i) => {
 }
 
 module.exports.FindDisabledButton = (components, prefix) => {
-	for (const index0 in components) {
-		if (components[index0].type === 'ACTION_ROW') for (const index1 in components[index0].components) {
-			const component = components[index0].components[index1];
-			if (component.type === 'BUTTON' && component.customId.indexOf(prefix) === 0 && component.disabled === true) {
-				return component.customId.substring(prefix.length);
-			};
+	for (const component0 of components) {
+		if (component0.type === 'ACTION_ROW') for (const component1 of component0.components) {
+			if (component1.type !== 'BUTTON' || component1.customId.indexOf(prefix) !== 0 || !component1.disabled) continue;
+			return component1.customId.substring(prefix.length);
 		}
 	}
+}
+
+module.exports.FindAllDefaultMenuOptions = (components, menuid) => {
+	const DefaultOptions = [];
+	for (const component0 of components) if (component0.type === 'ACTION_ROW') for (const component1 of component0.components)
+		if (component1.type === 'SELECT_MENU' && component1.customId === menuid) for (const option of component1.options)
+			if (option.default) DefaultOptions.concat(option.values)
+	return DefaultOptions;
+}
+
+module.exports.FindDefaultMenuOption = (components, menuid) => {
+	for (const component0 of components) if (component0.type === 'ACTION_ROW') for (const component1 of component0.components)
+		if (component1.type === 'SELECT_MENU' && component1.customId === menuid) return component1.options.find(option => option.default).value
 }

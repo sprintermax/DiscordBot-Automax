@@ -2,7 +2,7 @@
 
 const fetch = require('node-fetch');
 
-const { UpdateComponents, FindDisabledButton } = require('../../utils/MessageComponentActions.js');
+const { UpdateComponents, FindDefaultMenuOption } = require('../../utils/MessageComponentActions.js');
 
 module.exports = {
 	data: {
@@ -45,39 +45,42 @@ module.exports = {
 		await Client.channels.fetch(Interaction.channelId);
 		let lastimage;
 		const msg = await Interaction.editReply({
-			content: `Estatísticas de **${player}** na plataforma **${accountType.toUpperCase()}**`,
+			content: `Estatísticas de **${player}**`,
 			components: [
 				{
 					type: 'ACTION_ROW',
 					components: [
 						{
-							type: 'BUTTON',
-							label: 'Todos',
-							style: 'SUCCESS',
-							custom_id: 'image_all',
-							emoji: '⭐',
-							disabled: true
-						},
-						{
-							type: 'BUTTON',
-							label: 'Mouse e Teclado',
-							style: 'SUCCESS',
-							custom_id: 'image_keyboardMouse',
-							emoji: '⌨️'
-						},
-						{
-							type: 'BUTTON',
-							label: 'Controle',
-							style: 'SUCCESS',
-							custom_id: 'image_gamepad',
-							emoji: '🎮'
-						},
-						{
-							type: 'BUTTON',
-							label: 'Toque',
-							style: 'SUCCESS',
-							custom_id: 'image_touch',
-							emoji: '📱'
+							type: 'SELECT_MENU',
+							custom_id: 'image',
+							placeholder: 'Selecione um Periférico',
+							options: [
+								{
+									label: 'Todos',
+									description: 'Estatísticas somadas de todos os Métodos de Entrada',
+									value: 'all',
+									emoji: '⭐',
+									default: true
+								},
+								{
+									label: 'Mouse e Teclado',
+									description: 'Estatísticas salvas ao jogar com Teclado e Mouse',
+									value: 'keyboardMouse',
+									emoji: '⌨️'
+								},
+								{
+									label: 'Controle',
+									description: 'Estatísticas salvas ao jogar com Controle',
+									value: 'gamepad',
+									emoji: '🎮'
+								},
+								{
+									label: 'Toque',
+									description: 'Estatísticas salvas ao jogar com Touchscreen',
+									value: 'touch',
+									emoji: '📱'
+								}
+							]
 						}
 					]
 				},
@@ -85,59 +88,108 @@ module.exports = {
 					type: 'ACTION_ROW',
 					components: [
 						{
-							type: 'BUTTON',
-							label: 'Sempre',
-							style: 'PRIMARY',
-							custom_id: 'timewindow_lifetime',
-							emoji: '⭐',
-							disabled: true
-						},
-						{
-							type: 'BUTTON',
-							label: 'Temporada Atual',
-							style: 'PRIMARY',
-							custom_id: 'timewindow_season',
-							emoji: '731314508730990603'
+							type: 'SELECT_MENU',
+							custom_id: 'timewindow',
+							placeholder: 'Selecione um Período de Tempo',
+							options: [
+								{
+									label: 'Nenhum',
+									description: 'Exibir estatísticas desde a criação da conta',
+									value: 'lifetime',
+									emoji: '⭐',
+									default: true
+								},
+								{
+									label: 'Temporada Atual',
+									description: 'Exibir estatísticas salvas durante a Temporada atual',
+									value: 'season',
+									emoji: '731314508730990603'
+								}
+							]
 						}
 					]
 				}
+				// {
+				// 	type: 'ACTION_ROW',
+				// 	components: [
+				// 		{
+				// 			type: 'BUTTON',
+				// 			label: 'Todos',
+				// 			style: 'SUCCESS',
+				// 			custom_id: 'image_all',
+				// 			emoji: '⭐',
+				// 			disabled: true
+				// 		},
+				// 		{
+				// 			type: 'BUTTON',
+				// 			label: 'Mouse e Teclado',
+				// 			style: 'SUCCESS',
+				// 			custom_id: 'image_keyboardMouse',
+				// 			emoji: '⌨️'
+				// 		},
+				// 		{
+				// 			type: 'BUTTON',
+				// 			label: 'Controle',
+				// 			style: 'SUCCESS',
+				// 			custom_id: 'image_gamepad',
+				// 			emoji: '🎮'
+				// 		},
+				// 		{
+				// 			type: 'BUTTON',
+				// 			label: 'Toque',
+				// 			style: 'SUCCESS',
+				// 			custom_id: 'image_touch',
+				// 			emoji: '📱'
+				// 		}
+				// 	]
+				// },
+				// {
+				// 	type: 'ACTION_ROW',
+				// 	components: [
+				// 		{
+				// 			type: 'BUTTON',
+				// 			label: 'Sempre',
+				// 			style: 'PRIMARY',
+				// 			custom_id: 'timewindow_lifetime',
+				// 			emoji: '⭐',
+				// 			disabled: true
+				// 		},
+				// 		{
+				// 			type: 'BUTTON',
+				// 			label: 'Temporada Atual',
+				// 			style: 'PRIMARY',
+				// 			custom_id: 'timewindow_season',
+				// 			emoji: '731314508730990603'
+				// 		}
+				// 	]
+				// }
 			],
-			embeds: [
-				StatsEmbed(await GetPlayerStatsImage(), true)
-			]
+			embeds: [StatsEmbed(await GetPlayerStatsImage(), true)]
 		});
 		const collector = msg.createMessageComponentCollector({ idle: 30000 });
 
 		collector.on('collect', async i => {
-			if (i.user.id === Interaction.user.id) {
-				await i.update({
-					components: UpdateComponents(i.message.components, 'MIXED', i),
-					embeds: [
-						StatsEmbed('', true)
-					]
-				});
-				UpdateStatsMessage(i, msg.components);
-
-			} else {
-				i.reply({ content: 'Você não pode alterar opções do comando de outro usuário.', ephemeral: true });
-			}
+			if (i.user.id !== Interaction.user.id) return i.reply({ content: 'Você não pode alterar opções do comando de outro usuário.', ephemeral: true });
+			await i.update({
+				components: UpdateComponents(i.message.components, 'MIXED', i),
+				embeds: [StatsEmbed('', true)]
+			});
+			UpdateStatsMessage(i, msg.components);
 		});
 		collector.on('end', collected => {
 			Interaction.editReply({ components: [] });
 		});
 
 		async function GetPlayerStatsImage(idata) {
-			const timeWindow = idata ? FindDisabledButton(idata, 'timewindow_') : 'lifetime';
-			const image = idata ? FindDisabledButton(idata, 'image_') : 'all';
-			return await fetch(`https://fortnite-api.com/v2/stats/br/v2?name=${player}&image=${image}&accountType=${accountType}&timeWindow=${timeWindow}`).then(res => res.json());
+			const timeWindow = idata ? FindDefaultMenuOption(idata, 'timewindow') : 'lifetime';
+			const image = idata ? FindDefaultMenuOption(idata, 'image') : 'all';
+			return await fetch(`https://fortnite-api.com/v2/stats/br/v2?name=${encodeURI(player)}&image=${image}&accountType=${accountType}&timeWindow=${timeWindow}`).then(res => res.json());
 		}
 
 		async function UpdateStatsMessage(i, components) {
 			i.editReply({
 				components: UpdateComponents(components, 'LOAD_OPTIONS', i),
-				embeds: [
-					StatsEmbed(await GetPlayerStatsImage(components))
-				]
+				embeds: [StatsEmbed(await GetPlayerStatsImage(components))]
 			})
 		}
 
@@ -149,16 +201,16 @@ module.exports = {
 			if (request?.status === 200) {
 				lastimage = request.data.image;
 				embed.setImage(lastimage);
-			}
-			else if (loading && !request) {
+			} else if (loading) {
 				embed
 					.setDescription('Aguarde, estou atualizando as informações...')
 					.setImage(lastimage)
 
+			} else if (request?.status !== 200 || !request) {
+				embed
+					.setTitle('Oops!')
+					.setDescription('Um erro ocorreu!\nNão consegui encontrar nenhuma estatística.')
 			}
-			else embed
-				.setTitle('Oops!')
-				.setDescription('Não encontrei nenhuma estatística salva de acordo com as opções selecionadas.')
 			return embed
 		}
 	}
