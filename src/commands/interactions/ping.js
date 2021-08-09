@@ -5,7 +5,7 @@ module.exports = {
 		description: 'Verifica a latência do Bot e do servidor'
 	},
 	async run({ DiscordJS, Client, Interaction }) {
-		await Interaction.reply({
+		await Interaction.editReply({
 			embeds: [
 				new DiscordJS.MessageEmbed()
 					.setTitle('🏓 Pong!')

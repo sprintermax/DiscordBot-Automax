@@ -26,14 +26,14 @@ async function makereq() {
 	await Client.login(process.env.DCTKN);
 	if (!Client.application?.id) await Client.application?.fetch();
 	const CMDTools = cmdscope == 'guild' ? Client.guilds.cache.get(process.argv[4])?.commands : Client.application?.commands;
-	const cmdname = cmdscope == 'guild' ? process.argv[5] : process.argv[4];
-	const cmddata = Array.from(Commands).find(Cmd => Cmd.name == cmdname);
+	const cmdid = cmdscope == 'guild' ? process.argv[5] : process.argv[4];
+	const cmdname = Array.from(Commands).find(Cmd => Cmd.name == cmdid);
 	switch (operation) {
 		case 'post':
-			console.log(await CMDTools?.create(cmddata))
+			console.log(await CMDTools?.create(cmdname))
 			break;
 		case 'del':
-			console.log(await CMDTools?.delete(cmddata))
+			console.log(await CMDTools?.delete(cmdid))
 			break;
 		case 'list':
 			console.log(await CMDTools?.fetch())

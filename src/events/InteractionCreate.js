@@ -5,12 +5,13 @@ module.exports = {
 	async run({ DiscordJS, Client, Mongoose, Schemas }, Interaction) {
 		if (Interaction.isCommand()) {
 			if (!Client.Commands.Interactions.has(Interaction.commandName)) return;
+			await Interaction.deferReply();
 			try {
 				await Client.Commands.Interactions.get(Interaction.commandName)
 					.run({ DiscordJS, Client, Mongoose, Schemas, Interaction });
 			} catch (error) {
 				if (!Client.application?.owner) await Client.application?.fetch();
-				await Interaction.reply({
+				await Interaction.editReply({
 					content: 'Ops! Ocorreu um erro inesperado.',
 					embeds: [
 						new DiscordJS.MessageEmbed()
@@ -21,7 +22,7 @@ module.exports = {
 							.setFooter(`${Interaction.guild?.name || Client.user.username}`, Interaction.guild?.iconURL() || Client.user.avatarURL() || '')
 							.setTimestamp()
 					],
-					ephemeral: true
+					components: []
 				});
 			}
 		}
