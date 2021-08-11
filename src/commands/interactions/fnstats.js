@@ -1,10 +1,13 @@
 'use strict';
 
+// WIP | TEST COMMAND
+
 const fetch = require('node-fetch');
 
 const { UpdateComponents, FindDefaultMenuOption } = require('../../utils/MessageComponentActions.js');
 
 module.exports = {
+	scope: 'global',
 	data: {
 		name: 'fnstats',
 		description: 'Mostra estatísticas do Fortnite de um jogador',
@@ -39,7 +42,9 @@ module.exports = {
 			}
 		]
 	},
-	async run({ Interaction, DiscordJS, Client }) {
+	async run({ Runtime, Interaction }) {
+		const { DiscordJS, Client } = Runtime;
+		await Interaction.deferReply();
 		const player = Interaction.options.getString('player');
 		const accountType = Interaction.options.getString('platform') || 'epic';
 		await Client.channels.fetch(Interaction.channelId);
@@ -176,8 +181,8 @@ module.exports = {
 			});
 			UpdateStatsMessage(i, msg.components);
 		});
-		collector.on('end', collected => {
-			Interaction.editReply({ components: [] });
+		collector.on('end', ({ reason }) => {
+			if (reason !== 'messageDelete') Interaction.editReply({ components: [] });
 		});
 
 		async function GetPlayerStatsImage(idata) {

@@ -1,13 +1,48 @@
 'use strict';
 
-module.exports.ConvertComponentType = (type, method) => {
+module.exports.ConvertComponentType = (type, value, method) => {
 	const definitions = {
-		ACTION_ROW: 1,
-		BUTTON: 2,
-		SELECT_MENU: 3
+		ApplicationCommand: {
+			CHAT_INPUT: 1,
+			USER: 2,
+			MESSAGE: 3
+		},
+		ApplicationCommandOption: {
+			SUB_COMMAND: 1,
+			SUB_COMMAND_GROUP: 2,
+			STRING: 3,
+			INTEGER: 4,
+			BOOLEAN: 5,
+			USER: 6,
+			CHANNEL: 7,
+			ROLE: 8,
+			MENTIONABLE: 9,
+			NUMBER: 10
+		},
+		ApplicationCommandPermission: {
+			ROLE: 1,
+			USER: 2
+		},
+		MessageComponent: {
+			ACTION_ROW: 1,
+			BUTTON: 2,
+			SELECT_MENU: 3
+		},
+		InteractionRequest: {
+			PING: 1,
+			APPLICATION_COMMAND: 2,
+			MESSAGE_COMPONENT: 3
+		},
+		InteractionResponse: {
+			PONG: 1,
+			CHANNEL_MESSAGE_WITH_SOURCE: 4,
+			DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE: 5,
+			DEFERRED_UPDATE_MESSAGE: 6,
+			UPDATE_MESSAGE: 7
+		}
 	};
-	if (method === 'TO_NUMBER') return definitions[type];
-	if (method === 'TO_STRING') for (const item in definitions) if (definitions[item] == type) return item;
+	if (method === 'TO_NUMBER') return definitions[type][value];
+	if (method === 'TO_STRING') for (const item in definitions[type]) if (definitions[type][item] == value) return item;
 }
 
 module.exports.UpdateComponents = (components, method, i) => {
@@ -28,7 +63,7 @@ module.exports.UpdateComponents = (components, method, i) => {
 	return components;
 }
 
-module.exports.FindDisabledButton = (components, prefix) => {
+module.exports.FindRowDisabledButton = (components, prefix) => {
 	for (const component0 of components) {
 		if (component0.type === 'ACTION_ROW') for (const component1 of component0.components) {
 			if (component1.type !== 'BUTTON' || component1.customId.indexOf(prefix) !== 0 || !component1.disabled) continue;

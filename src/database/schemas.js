@@ -1,215 +1,190 @@
 'use strict';
 
-module.exports.init = (mongoose) => {
+module.exports.init = (Mongoose) => {
+
+	console.log('[TASK] Importação de Schemas iniciada.');
+
+	// Emblem Data Schema
+
+	const EmblemData = new Mongoose.Schema({
+		id: { type: Number, required: true },
+		name: { type: String, required: true },
+		desc: { type: String },
+		image: { type: String },
+		type: { type: String, required: true },
+		created: { type: String, default: Date.now() },
+		members: [{ type: String }]
+	});
+	console.log('[LOAD] "Mongoose: EmblemData" carregado.');
+
+	// Inventory Item Schema
+
+	const InventoryItem = new Mongoose.Schema({
+		id: { type: Number, required: true },
+		type: { type: String, required: true },
+		count: { type: Number, default: 0 },
+		data: { type: Object }
+	});
+	console.log('[LOAD] "Mongoose: InventoryItem" carregado.');
 
 	// User Data Schema
 
-	let userdata = new mongoose.model(
-		"users", mongoose.Schema({
-			userid: { type: String, default: 0 },
-			guildid: { type: String, default: 0 },
-			profileviewcount: { type: Number, default: 0 },
-			upvotes: {
-				confianca: { type: Number, default: 0 },
-				karma: { type: Number, default: 0 }
-			},
-			leveling: {
-				level: { type: Number, default: 0 },
-				exp: { type: Number, default: 0 }
-			},
-			economy: {
-				money: { type: Number, default: 0 },
-				flixcoins: { type: Number, default: 0 },
-				fragments: { type: Number, default: 0 }
-			},
-			delays: {
-				daily: { type: Date, default: Date.now },
-				karma: { type: Date, default: Date.now }
-			},
-			fnlinkednick: { type: String, default: '' },
-			inventory: {
-				figurinhas: [{ type: String }],
-				emblemas: [{ type: Number }],
-				itens: { type: Array }/*,
-                {
-                    id: 1,
-                    type: 'cardpack',
-                    rarity: 'epic',
-                    count: 3
-                }*/
-			}
-		}
-		));
-	exports.DBUser = userdata;
-	console.log('[LOAD] "Userdata Schema" carregado com sucesso.')
-
-	// Guild Data Schema
-
-	let guilddata = new mongoose.model(
-		"guilds", mongoose.Schema({
-			guildid: { type: String, default: 0 },
-			config: {
-				prefix: { type: String, default: 'f!' },
-				cmdwait: {
-					time: { type: Number, default: 3 },
-					whitelist: {
-						channels: { type: Array },
-						users: { type: Array },
-						roles: { type: Array }
-					},
-					blacklist: {
-						channels: { type: Array },
-						users: { type: Array },
-						roles: { type: Array }
-					}
-				},
-				logchats: {
-					guildshop: { type: String, default: 0 },
-					fnshop: { type: String, default: 0 },
-					badwords: { type: String, default: 0 },
-					leveling: { type: String, default: 0 },
-					punishment: { type: String, default: 0 },
-					membertrade: { type: String, default: 0 }
-				}
-			},
-			currentids: {
-				emblemitem: { type: Number, default: 1 },
-				shopitem: { type: Number, default: 1 }
-			},
-			vips: {
-				dailymultiplier: { type: Number, default: 1 },
-				xpmultiplier: { type: Number, default: 1 },
-				roles: { type: Array },
-				users: { type: Array }
-			},
-			fnshop: {
-				enabled: { type: Boolean, default: false }
-			},
-			badwords: {
-				enabled: { type: Boolean, default: false },
-				whitelist: {
-					strings: { type: Array },
-					channels: { type: Array },
-					users: { type: Array },
-					roles: { type: Array }
-				},
-				blacklist: {
-					strings: { type: Array },
-					channels: { type: Array },
-					users: { type: Array },
-					roles: { type: Array }
-				}
-			},
-			leveling: {
-				enabled: { type: Boolean, default: false },
-				xpammount: { type: Number, default: 3 },
-				whitelist: {
-					channels: { type: Array },
-					roles: { type: Array }
-				},
-				blacklist: {
-					channels: { type: Array },
-					roles: { type: Array }
-				}
-			},
-			economy: {
-				enabled: { type: Boolean, default: false },
-				bankmoney: { type: Number, default: 0 },
-				itemshop: { type: Array },
-				dailyrange: [{ type: Number, default: 100 }, { type: Number, default: 250 }],
-				whitelist: {
-					channels: { type: Array },
-					roles: { type: Array }
-				},
-				blacklist: {
-					channels: { type: Array },
-					roles: { type: Array }
-				}
-			},
-			interactions: {
-				enabled: { type: Boolean, default: false },
-				whitelist: {
-					channels: { type: Array },
-					roles: { type: Array }
-				},
-				blacklist: {
-					channels: { type: Array },
-					roles: { type: Array }
-				}
-			},
-			misc: {
-				dailyusers: { type: Array },
-				karmausers: { type: Array }
-			}
-		}
-		));
-	exports.DBGuild = guilddata;
-	console.log('[LOAD] "Guildata Schema" carregado com sucesso.')
-
-	// Emblem Schema
-
-	let emblemdata = new mongoose.model(
-		"emblems", mongoose.Schema({
-			guildid: { type: String },
-			name: { type: String },
-			rarity: { type: String },
-			date: { type: String },
-			desc: { type: String },
-			id: { type: Number },
-			members: { type: Number, default: 0 },
-		}
-		));
-	exports.DBEmblemData = emblemdata;
-	console.log('[LOAD] "Emblemdata Schema" carregado com sucesso.')
-
-	// Shop Schema
-
-	let shopdata = new mongoose.model(
-		"shops", mongoose.Schema({
-			guildid: { type: String },
-			name: { type: String },
-			price: { type: Number },
-			currency: { type: String },
-			desc: { type: String },
-			itemid: { type: Number },
-			id: { type: Number }
-		}
-		));
-	exports.DBShopData = shopdata;
-	console.log('[LOAD] "Shopdata Schema" carregado com sucesso.')
-
-	// Fortnite Item Reminder Schema
-
-	let fnreminderdata = new mongoose.model(
-		"fnreminders", mongoose.Schema({
-			userid: { type: String },
-			name: { type: String },
-			cid: { type: String },
-			rarity: { type: String },
-			desc: { type: String },
-			date: { type: String }
-		}
-		));
-	exports.DBFNReminderData = fnreminderdata;
-	console.log('[LOAD] "FNReminderData Schema" carregado com sucesso.')
+	const UserData = new Mongoose.Schema({
+		userid: { type: String, required: true },
+		profile: {
+			created: { type: Date, default: Date.now() },
+			viewcount: { type: Number, default: 0 },
+			karma: { type: Number, default: 0 },
+			exp: { type: Number, default: 0 }
+		},/*
+		economy: {
+			money: { type: Number, default: 0 },
+			eventcoins: { type: Number, default: 0 }
+		},*/
+		fortnite: {
+			accountid: { type: String, default: '' },
+		}/*,
+		inventory: [InventoryItem]*/
+	});
+	console.log('[LOAD] "Mongoose: UserData" carregado com sucesso.');
 
 	// Codes Schema
 
-	let codedata = new mongoose.model(
-		"codes", mongoose.Schema({
-			guildid: { type: String },
-			code: { type: String },
-			usedcount: { type: Number, default: 0 },
+	const GuildCodeData = new Mongoose.Schema({
+		code: { type: String, required: true },
+		created: { type: String, default: Date.now() },
+		members: [{ type: String }],
+		grants: [{ type: Object, required: true }],
+		config: {
 			maxuses: { type: String, default: 'infinite' },
-			usespermember: { type: Number, default: 1 },
-			allowedredeem: { type: String, default: 'onlyself' },
-			createddate: { type: String },
-			expiredate: { type: String, default: 'never' },
-			type: { type: String },
-			data: { type: Object },
-			members: { type: Array },
+			redeem: {
+				method: { type: String, default: 'onlyself' }, // onlyself | onlygift | onlyvip | 
+				gifting: {
+					consumeon: { type: String, default: 'sender' }, // sender | receiver
+					allowed: { type: Boolean, default: false },
+					tononvip: { type: Boolean, default: false }, // If a vip member can redeem as a gift for a non-vip member
+					fromnonvip: { type: Boolean, default: true } // If a non-vip member can redeem as a Gift for a VIP member
+				},
+				whitelist: {
+					users: [{ type: String }],
+					roles: [{ type: String }]
+				},
+				blacklist: {
+					users: [{ type: String }],
+					roles: [{ type: String }]
+				}
+			},
+			expires: {
+				autodelete: { type: Boolean, default: true },
+				afterdate: { type: String, default: 'never' },
+				afteruses: { type: Number, default: -1 }
+			}
 		}
-		));
-	exports.DBCodeData = codedata;
-	console.log('[LOAD] "Codedata Schema" carregado com sucesso.')
+	});
+	console.log('[LOAD] "Mongoose: GuildCodeData" carregado com sucesso.')
+
+	// Guild Data Schema and Model
+
+	exports.GuildDB = new Mongoose.model("Guilds", Mongoose.Schema({
+		guildid: { type: String, required: true },
+		config: {
+			features: {
+				fnshop: { type: Boolean, default: false },
+				badwords: {
+					enabled: { type: Boolean, default: false },
+					logchannel: { type: String, default: 0 },
+					whitelist: {
+						strings: [{ type: String }],
+						channels: [{ type: String }],
+						users: [{ type: String }],
+						roles: [{ type: String }]
+					},
+					blacklist: {
+						strings: [{ type: String }],
+						channels: [{ type: String }],
+						users: [{ type: String }],
+						roles: [{ type: String }]
+					}
+				},
+				leveling: {
+					enabled: { type: Boolean, default: false },
+					logchannel: { type: String, default: 0 },
+					xpammount: { type: Number, default: 3 },
+					vipmultiplier: { type: Number, default: 1 },
+					whitelist: {
+						channels: [{ type: String }],
+						users: [{ type: String }],
+						roles: [{ type: String }]
+					},
+					blacklist: {
+						channels: [{ type: String }],
+						users: [{ type: String }],
+						roles: [{ type: String }]
+					}
+				}/*
+					economy: {
+						enabled: { type: Boolean, default: false },
+						bankmoney: { type: Number, default: 0 },
+						guildshop: [GuildShopItem], // WIP - TO DO
+						tradefeepercent: { type: Number, default: 5 },
+						logchannels: {
+							shop: { type: String, default: 0 },
+							trade: { type: String, default: 0 }
+						},
+						vip: {
+							dailymultiplier: { type: Number, default: 1 },
+							tradefeepercent: { type: Number, default: 2.5 },
+						},
+						dailyrange: {
+							min: { type: Number, default: 100 },
+							max: { type: Number, default: 250 }
+						},
+						whitelist: {
+							channels: [{ type: String }],
+							users: [{ type: String }],
+							roles: [{ type: String }]
+						},
+						blacklist: {
+							channels: [{ type: String }],
+							users: [{ type: String }],
+							roles: [{ type: String }]
+						}
+					}*/
+			},
+			vips: {
+				roles: [{ type: String }],
+				users: [{ type: String }]
+			},
+			chatlogs: {
+				punishment: { type: String, default: 0 },
+				fnbrshop: { type: String, default: 0 }
+			}
+		},
+		redeemcodes: [GuildCodeData],
+		delays: {
+			karmausers: [{ type: String }]/*,
+			dailyusers: [{ type: String }]*/
+		},
+		profiles: [UserData]/*,
+		emblems: [EmblemData]*/
+	}));
+	console.log('[LOAD] "Mongoose: GuildDB" carregado com sucesso.')
+
+	// Emblem Data Schema
+
+	const FNItemReminderData = new Mongoose.Schema({
+		fnitemid: { type: String, required: true },
+		created: { type: String, default: Date.now() }
+	});
+	console.log('[LOAD] "Mongoose: FNItemReminderData" carregado.');
+
+	// Fortnite Item Reminder Schema and Model
+
+	exports.FNReminderDB = new Mongoose.model("FNReminders", Mongoose.Schema({
+		userid: { type: String },
+		itens: [FNItemReminderData]
+	}));
+	console.log('[LOAD] "Mongoose: FNReminderDB" carregado com sucesso.')
+
+	console.log('[TASK] Importação de Schemas finalizada.\n');
 };

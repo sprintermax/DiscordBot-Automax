@@ -1,5 +1,7 @@
 'use strict';
+
 module.exports = {
+	scope: 'global',
 	data: {
 		name: 'avatar',
 		description: 'Mostra a foto de perfil sua ou de algum usuário',
@@ -13,6 +15,6 @@ module.exports = {
 	},
 	async run({ Interaction }) {
 		const user = Interaction.options.getUser('user') || Interaction.user;
-		await Interaction.editReply({ files: [user.avatarURL({ dynamic: true, size: 2048 })] });
+		await Interaction.reply({ files: [user.avatarURL({ dynamic: true, size: 2048 })] });
 	}
 }
