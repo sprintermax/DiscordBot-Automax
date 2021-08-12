@@ -40,10 +40,7 @@ module.exports.init = (Mongoose) => {
 		economy: {
 			money: { type: Number, default: 0 },
 			eventcoins: { type: Number, default: 0 }
-		},*/
-		fortnite: {
-			accountid: { type: String, default: '' },
-		}/*,
+		},
 		inventory: [InventoryItem]*/
 	});
 	console.log('[LOAD] "Mongoose: UserData" carregado com sucesso.');
@@ -173,18 +170,28 @@ module.exports.init = (Mongoose) => {
 	// Emblem Data Schema
 
 	const FNItemReminderData = new Mongoose.Schema({
+		itemid: { type: String, required: true },
 		fnitemid: { type: String, required: true },
+		persistent: { type: Boolean, default: false },
 		created: { type: String, default: Date.now() }
 	});
 	console.log('[LOAD] "Mongoose: FNItemReminderData" carregado.');
 
-	// Fortnite Item Reminder Schema and Model
+	// Linked Services Schemas and Model
 
-	exports.FNReminderDB = new Mongoose.model("FNReminders", Mongoose.Schema({
+	exports.UserLinksDB = new Mongoose.model("UserLinkedAccounts", Mongoose.Schema({
 		userid: { type: String },
-		itens: [FNItemReminderData]
+		fortnite: {
+			accountid: { type: String },
+			linkeddate: { type: Date },
+			shopreminders: [FNItemReminderData]
+		},
+		minecraft: {
+			username: { type: String },
+			linkeddate: { type: Date }
+		}
 	}));
-	console.log('[LOAD] "Mongoose: FNReminderDB" carregado com sucesso.')
+	console.log('[LOAD] "Mongoose: UserLinksDB" carregado com sucesso.')
 
 	console.log('[TASK] Importação de Schemas finalizada.\n');
 };

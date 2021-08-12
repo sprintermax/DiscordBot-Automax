@@ -18,6 +18,7 @@ const DiscordEvents = fs.existsSync('./src/events/') ? fs.readdirSync('./src/eve
 if (DiscordEvents.length > 0) {
 	console.log('[TASK] Importação dos Eventos iniciada.');
 	for (const EventFile of DiscordEvents) {
+		if (!EventFile.endsWith('.js')) continue;
 		const Event = require(`./src/events/${EventFile}`);
 		Client.on(Event.name, Event.run.bind(null, { DiscordJS, Client, Mongoose, Schemas }));
 		console.log(`[LOAD] Evento "${Event.name}" carregado com sucesso.`);
@@ -29,6 +30,7 @@ const InteractionCommands = fs.existsSync('./src/commands/interactions/') ? fs.r
 if (InteractionCommands.length > 0) {
 	console.log('[TASK] Importação dos Comandos Interativos iniciada.');
 	for (const CommandFile of InteractionCommands) {
+		if (!CommandFile.endsWith('.js')) continue;
 		const Command = require(`./src/commands/interactions/${CommandFile}`);
 		Client.Commands.Interactions.set(Command.data.name, Command);
 		console.log(`[LOAD] Comando Interativo "${Command.data.name}" carregado com sucesso.`);
@@ -40,6 +42,7 @@ const LegacyCommands = fs.existsSync('./src/commands/legacy/') ? fs.readdirSync(
 if (LegacyCommands.length > 0) {
 	console.log('[TASK] Importação dos Comandos Legados iniciada.');
 	for (const CommandFile of LegacyCommands) {
+		if (!CommandFile.endsWith('.js')) continue;
 		const Command = require(`./src/commands/legacy/${CommandFile}`);
 		Client.Commands.Legacy.set(Command.name, Command);
 		console.log(`[LOAD] Comando Legado "${Command.name}" carregado com sucesso.`);
