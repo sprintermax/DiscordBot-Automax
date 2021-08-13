@@ -7,7 +7,7 @@ const fetch = require('node-fetch');
 const { UpdateComponents, FindDefaultMenuOption } = require('../../utils/MessageComponentActions.js');
 
 module.exports = {
-	scope: 'global',
+	scope: 'guild',
 	data: {
 		name: 'fnstats',
 		description: 'Mostra estatísticas do Fortnite de um jogador',
@@ -181,8 +181,8 @@ module.exports = {
 			});
 			UpdateStatsMessage(i, msg.components);
 		});
-		collector.on('end', ({ reason }) => {
-			if (reason !== 'messageDelete') Interaction.editReply({ components: [] });
+		collector.on('end', (c, r) => {
+			if (r !== 'messageDelete') Interaction.editReply({ components: [] });
 		});
 
 		async function GetPlayerStatsImage(idata) {

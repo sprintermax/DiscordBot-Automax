@@ -17,7 +17,7 @@ module.exports.init = (Mongoose) => {
 	});
 	console.log('[LOAD] "Mongoose: EmblemData" carregado.');
 
-	// Inventory Item Schema
+	// Inventory Item Data Schema
 
 	const InventoryItem = new Mongoose.Schema({
 		id: { type: Number, required: true },
@@ -45,7 +45,7 @@ module.exports.init = (Mongoose) => {
 	});
 	console.log('[LOAD] "Mongoose: UserData" carregado com sucesso.');
 
-	// Codes Schema
+	// Code Data Schema
 
 	const GuildCodeData = new Mongoose.Schema({
 		code: { type: String, required: true },
@@ -167,7 +167,7 @@ module.exports.init = (Mongoose) => {
 	}));
 	console.log('[LOAD] "Mongoose: GuildDB" carregado com sucesso.')
 
-	// Emblem Data Schema
+	// Fortnite Item Reminder Data Schema
 
 	const FNItemReminderData = new Mongoose.Schema({
 		itemid: { type: String, required: true },
@@ -184,7 +184,7 @@ module.exports.init = (Mongoose) => {
 		fortnite: {
 			accountid: { type: String },
 			linkeddate: { type: Date },
-			shopreminders: [FNItemReminderData]
+			itemreminders: [FNItemReminderData]
 		},
 		minecraft: {
 			username: { type: String },

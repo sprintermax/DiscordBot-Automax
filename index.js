@@ -6,7 +6,11 @@ const Mongoose = require('mongoose');
 const fs = require('fs');
 
 const Config = require('./src/config.js');
+const HandleError = require('./src/utils/HandleError.js');
 const Schemas = require('./src/database/schemas.js').init(Mongoose);
+
+const FortniteClient = require('./src/clients/fnclient.js');
+const { FNClient } = FortniteClient;
 
 const Client = new DiscordJS.Client({ intents: Config.Discord.ClientIntents });
 Client.Commands = {
@@ -51,7 +55,19 @@ if (LegacyCommands.length > 0) {
 } else console.log('[INFO] Nenhum Comando Legado encontrado.\n');
 
 console.log('[CONNECTION] Iniciando Conexão com a Database.');
-Mongoose.connect(process.env.MNGDB, Config.MongoDB.ConnectionOptions).then(() => {
+Mongoose.connect(process.env.MNGDB, Config.MongoDB.ConnectionOptions).then(async () => {
 	console.log('[CONNECTION] Conectado a Database com sucesso.\n');
-	Client.login(process.env.DCTKN);
+	try {
+		await FortniteClient.init();
+	} catch (Err) {
+		HandleError({ ProgErr: Err });
+	}
+	await Client.login(process.env.DCTKN);
+
+	process.on('SIGINT', function () {
+		Client.destroy();
+		FNClient.logout();
+		Mongoose.disconnect();
+		process.exit();
+	});
 });

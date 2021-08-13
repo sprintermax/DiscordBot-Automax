@@ -23,3 +23,14 @@ module.exports.MongoDB = {
 		useUnifiedTopology: true
 	}
 }
+
+module.exports.FNClient = {
+	OwnerID: process.env.FNOWNR,
+	FunnyParty: true,
+	FunnyPartyCosmetics: {
+		Backblings: [],
+		Outfits: [],
+		Emotes: []
+	},
+	MaxFriends: 500
+}
