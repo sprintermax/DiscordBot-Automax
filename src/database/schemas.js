@@ -148,6 +148,7 @@ module.exports.init = (Mongoose) => {
 						}
 					}*/
 			},
+			botlanguage: { type: String, default: 'english' },
 			vips: {
 				roles: [{ type: String }],
 				users: [{ type: String }]
@@ -194,4 +195,4 @@ module.exports.init = (Mongoose) => {
 	console.log('[LOAD] "Mongoose: UserLinksDB" carregado com sucesso.')
 
 	console.log('[TASK] Importação de Schemas finalizada.\n');
-};
+}

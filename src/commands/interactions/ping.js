@@ -1,10 +1,11 @@
 'use strict';
 
+const CommandBuilder = require('../../utils/InteractionCommandBuilder.js');
+
 module.exports = {
-	data: {
-		name: 'ping',
-		description: 'Verifica a latência do Bot e do servidor'
-	},
+	data: new CommandBuilder.Command()
+		.SetName('ping')
+		.SetDesc('Verifica a latência do Bot e do servidor'),
 	async run({ DiscordJS, Client, Interaction }) {
 		await Interaction.editReply({
 			embeds: [

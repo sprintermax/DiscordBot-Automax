@@ -17,9 +17,9 @@ const FNClient = new FNBR.Client({
 });
 
 function LoadDefaultCosmetics() {
-	FNClient.party.me.setOutfit('CID_069_Athena_Commando_F_PinkBear');
-	FNClient.party.me.setBackpack('BID_557_SharkSuitFemale');
 	FNClient.party.me.clearEmote();
+	FNClient.party.me.setOutfit(FNCfg.DefaultCosmetics.Outfit);
+	FNClient.party.me.setBackpack(FNCfg.DefaultCosmetics.Backpack);
 }
 
 async function FriendsCheckup() {
@@ -57,23 +57,26 @@ const FunnyParty = {
 	}
 }
 
-FNClient.on('party:updated', async (JoinedMember) => {
+FNClient.on('party:member:joined', async (JoinedMember) => {
 	if (JoinedMember.displayName === FNClient.user.displayName) return;
-	if (Array.from(FNClient.party.members, ([, pm]) => (pm)).length > 1) {
-		await FNClient.party.me.clearEmote();
-		await Delay.WaitMilis(3000);
-		await FNClient.party.me.setEmote("EID_Wave");
-		await Delay.WaitMilis(3000);
-		if (FNCfg.FunnyParty) {
-			FunnyParty.started = true;
-			FunnyParty.run();
-		}
-	} FunnyParty.started = false;
+	await FNClient.party.me.clearEmote();
+	await Delay.WaitMilis(3000);
+	await FNClient.party.me.setEmote("EID_Wave");
+	await Delay.WaitMilis(3000);
 });
 
-FNClient.on('friend:message', (FriendMessage) => {
-	console.log(`Mensagem Recebida de ${FriendMessage.author.displayName}\nConteúdo da Mensagem: ${FriendMessage.content}`);
-	if (FriendMessage.content.startsWith('!Ping')) {
-		FriendMessage.author.sendMessage('Pong! :D');
+FNClient.on('party:updated', async (JoinedMember) => {
+	if (FNCfg.FunnyPartyEnabled && (Array.from(FNClient.party.members, ([, pm]) => (pm)).length > 3)) {
+		FunnyParty.started = true;
+		FunnyParty.run();
+	} else if (FunnyParty.started) FunnyParty.started = false;
+});
+
+FNClient.on('friend:message', async (FriendMessage) => {
+	console.log(`[FNCLIENT] Mensagem Recebida de ${FriendMessage.author.displayName} | Conteúdo da Mensagem: ${FriendMessage.content}`);
+	if (FriendMessage.content.toLowerCase().startsWith('link')) {
+		await FriendMessage.author.sendMessage('test link response');
 	}
 });
+
+FNClient.on('party:invite', (invitation) => { invitation.decline(); });

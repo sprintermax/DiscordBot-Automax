@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports.ConvertComponentType = (type, value, method) => {
+module.exports.ConvertComponentType = (type, value, method = 'INVERT_TYPE') => {
 	const definitions = {
 		ApplicationCommand: {
 			CHAT_INPUT: 1,
@@ -40,9 +40,17 @@ module.exports.ConvertComponentType = (type, value, method) => {
 			DEFERRED_UPDATE_MESSAGE: 6,
 			UPDATE_MESSAGE: 7
 		}
-	};
-	if (method === 'TO_NUMBER') return definitions[type][value];
-	if (method === 'TO_STRING') for (const item in definitions[type]) if (definitions[type][item] == value) return item;
+	}
+	let result;
+	if (['INVERT_TYPE', 'TO_NUMBER'].includes(method)) {
+		result = definitions[type]?.[value];
+	}
+	if (['INVERT_TYPE', 'TO_STRING'].includes(method)) {
+		for (const item in definitions[type]) {
+			if (definitions[type]?.[item] == value) result = item;
+		}
+	}
+	return result;
 }
 
 module.exports.UpdateComponents = (components, method, i) => {
