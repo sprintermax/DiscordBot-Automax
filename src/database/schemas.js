@@ -1,198 +1,193 @@
 'use strict';
 
-module.exports.init = (Mongoose) => {
+const Mongoose = require('mongoose');
 
-	console.log('[TASK] Importação de Schemas iniciada.');
+console.log('[TASK] Importação dos modelos da database iniciada.');
 
-	// Emblem Data Schema
-
-	const EmblemData = new Mongoose.Schema({
-		id: { type: Number, required: true },
-		name: { type: String, required: true },
-		desc: { type: String },
-		image: { type: String },
-		type: { type: String, required: true },
-		created: { type: String, default: Date.now() },
-		members: [{ type: String }]
-	});
-	console.log('[LOAD] "Mongoose: EmblemData" carregado.');
-
-	// Inventory Item Data Schema
-
-	const InventoryItem = new Mongoose.Schema({
-		id: { type: Number, required: true },
-		type: { type: String, required: true },
-		count: { type: Number, default: 0 },
-		data: { type: Object }
-	});
-	console.log('[LOAD] "Mongoose: InventoryItem" carregado.');
-
-	// User Data Schema
-
-	const UserData = new Mongoose.Schema({
-		userid: { type: String, required: true },
-		profile: {
-			created: { type: Date, default: Date.now() },
-			viewcount: { type: Number, default: 0 },
-			karma: { type: Number, default: 0 },
-			exp: { type: Number, default: 0 }
-		},/*
-		economy: {
-			money: { type: Number, default: 0 },
-			eventcoins: { type: Number, default: 0 }
+const GuildDB = Mongoose.model('Guilds', Mongoose.Schema({
+	GuildID: { type: String, required: true },
+	Leveling: {
+		Enabled: { type: Boolean, default: false },
+		LogChannel: { type: String },
+		ExpAmmount: { type: Number, default: 3 },
+		Whitelist: {
+			Channels: [{ type: String }],
+			Users: [{ type: String }],
+			Roles: [{ type: String }]
 		},
-		inventory: [InventoryItem]*/
-	});
-	console.log('[LOAD] "Mongoose: UserData" carregado com sucesso.');
-
-	// Code Data Schema
-
-	const GuildCodeData = new Mongoose.Schema({
-		code: { type: String, required: true },
-		created: { type: String, default: Date.now() },
-		members: [{ type: String }],
-		grants: [{ type: Object, required: true }],
-		config: {
-			maxuses: { type: String, default: 'infinite' },
-			redeem: {
-				method: { type: String, default: 'onlyself' }, // onlyself | onlygift | onlyvip | 
-				gifting: {
-					consumeon: { type: String, default: 'sender' }, // sender | receiver
-					allowed: { type: Boolean, default: false },
-					tononvip: { type: Boolean, default: false }, // If a vip member can redeem as a gift for a non-vip member
-					fromnonvip: { type: Boolean, default: true } // If a non-vip member can redeem as a Gift for a VIP member
+		Blacklist: {
+			Channels: [{ type: String }],
+			Users: [{ type: String }],
+			Roles: [{ type: String }]
+		}
+	},
+	Economy: {
+		Enabled: { type: Boolean, default: false },
+		BankMoney: { type: Number, default: 0 },
+		//GuildShop: [GuildShopItem], // To-Do
+		TradeFeePercent: { type: Number, default: 5 },
+		LogChannels: {
+			ShopPurchases: { type: String },
+			TradesComplete: { type: String }
+		},
+		DailyRange: {
+			Min: { type: Number, default: 100 },
+			Max: { type: Number, default: 250 }
+		},
+		Whitelist: {
+			Channels: [{ type: String }],
+			Users: [{ type: String }],
+			Roles: [{ type: String }]
+		},
+		Blacklist: {
+			Channels: [{ type: String }],
+			Users: [{ type: String }],
+			Roles: [{ type: String }]
+		}
+	},
+	Moderation: {
+		LogChannels: {
+			ManualPunishments: { type: String },
+			DeletedBadwords: { type: String },
+		},
+		Badwords: {
+			Enabled: { type: Boolean, default: false },
+			Whitelist: {
+				Strings: [{ type: String }],
+				Channels: [{ type: String }],
+				Users: [{ type: String }],
+				Roles: [{ type: String }]
+			},
+			Blacklist: {
+				Strings: [{ type: String }],
+				Channels: [{ type: String }],
+				Users: [{ type: String }],
+				Roles: [{ type: String }]
+			}
+		}
+	},
+	GuildVips: {
+		Roles: [{ type: String }],
+		Users: [{ type: String }],
+		Chats: [{ type: String }],
+		Modifiers: {
+			ExpMultiplier: { type: Number, default: 1 },
+			DailyMultiplier: { type: Number, default: 1 },
+			TradeFeePercent: { type: Number, default: 1 },
+			BonusRepReceive: { type: Number, default: 1 },
+			BonusRepGive: { type: Number, default: 1 }
+		}
+	},
+	Fortnite: {
+		AutoShop: {
+			Enabled: { type: Boolean, default: false },
+			Channel: { type: String },
+			Language: { type: String, default: 'en' }
+		}
+	},
+	Dailies: {
+		ResetMode: { type: String, default: 'midnight_utc' }, // or 'permember_12h' or 'permember_24h'
+		KarmaUsers: [{ type: String }],
+		DailyUsers: [{ type: String }]
+	},
+	GuildMembers: [
+		new Mongoose.Schema({
+			UserId: { type: String, required: true },
+			Profile: {
+				Created: { type: Date, default: Date.now() },
+				ViewCount: { type: Number, default: 0 },
+				Reputation: { type: Number, default: 0 },
+				Experience: { type: Number, default: 0 },
+				Money: { type: Number, default: 0 }
+			},
+			Inventory: [
+				new Mongoose.Schema({
+					ItemId: { type: Number, required: true },
+					ItemType: { type: String, required: true },
+					ItemCount: { type: Number, default: 0 },
+					ItemData: { type: Object }
+				})
+			]
+		})
+	],
+	GuildCodes: [
+		new Mongoose.Schema({
+			GuildCode: { type: String, required: true },
+			Created: { type: String, default: Date.now() },
+			RedeemedMembers: [{ type: String }],
+			Grants: [{ type: Object, required: true }],
+			Config: {
+				MaxUses: { type: Number, default: -1 },
+				Redeem: {
+					Method: { type: String, default: 'everyone' }, // everyone | onlyvip | notvip
+					Whitelist: {
+						Channels: [{ type: String }],
+						Users: [{ type: String }],
+						Roles: [{ type: String }]
+					},
+					Blacklist: {
+						Channels: [{ type: String }],
+						Users: [{ type: String }],
+						Roles: [{ type: String }]
+					}
 				},
-				whitelist: {
-					users: [{ type: String }],
-					roles: [{ type: String }]
-				},
-				blacklist: {
-					users: [{ type: String }],
-					roles: [{ type: String }]
+				Expires: {
+					AutoDelete: { type: Boolean, default: true },
+					DeleteAfterMaxUses: { type: Boolean, default: true },
+					DeleteAfterDate: { type: String, default: 'never' },
+					DeleteAfterUses: { type: Number, default: -1 }
 				}
-			},
-			expires: {
-				autodelete: { type: Boolean, default: true },
-				afterdate: { type: String, default: 'never' },
-				afteruses: { type: Number, default: -1 }
 			}
-		}
-	});
-	console.log('[LOAD] "Mongoose: GuildCodeData" carregado com sucesso.')
+		})
+	],
+	Emblems: [
+		new Mongoose.Schema({
+			EmblemId: { type: Number, required: true },
+			Name: { type: String, required: true },
+			Desc: { type: String },
+			Image: { type: String },
+			Type: { type: String, required: true },
+			Date: { type: String, default: Date.now() },
+			Members: [{ type: String }]
+		})
+	]
+}));
 
-	// Guild Data Schema and Model
+console.log('[LOAD] Modelo GuildDB carregado com sucesso.');
 
-	exports.GuildDB = new Mongoose.model("Guilds", Mongoose.Schema({
-		guildid: { type: String, required: true },
-		config: {
-			features: {
-				fnshop: { type: Boolean, default: false },
-				badwords: {
-					enabled: { type: Boolean, default: false },
-					logchannel: { type: String, default: 0 },
-					whitelist: {
-						strings: [{ type: String }],
-						channels: [{ type: String }],
-						users: [{ type: String }],
-						roles: [{ type: String }]
-					},
-					blacklist: {
-						strings: [{ type: String }],
-						channels: [{ type: String }],
-						users: [{ type: String }],
-						roles: [{ type: String }]
-					}
-				},
-				leveling: {
-					enabled: { type: Boolean, default: false },
-					logchannel: { type: String, default: 0 },
-					xpammount: { type: Number, default: 3 },
-					vipmultiplier: { type: Number, default: 1 },
-					whitelist: {
-						channels: [{ type: String }],
-						users: [{ type: String }],
-						roles: [{ type: String }]
-					},
-					blacklist: {
-						channels: [{ type: String }],
-						users: [{ type: String }],
-						roles: [{ type: String }]
-					}
-				}/*
-					economy: {
-						enabled: { type: Boolean, default: false },
-						bankmoney: { type: Number, default: 0 },
-						guildshop: [GuildShopItem], // WIP - TO DO
-						tradefeepercent: { type: Number, default: 5 },
-						logchannels: {
-							shop: { type: String, default: 0 },
-							trade: { type: String, default: 0 }
-						},
-						vip: {
-							dailymultiplier: { type: Number, default: 1 },
-							tradefeepercent: { type: Number, default: 2.5 },
-						},
-						dailyrange: {
-							min: { type: Number, default: 100 },
-							max: { type: Number, default: 250 }
-						},
-						whitelist: {
-							channels: [{ type: String }],
-							users: [{ type: String }],
-							roles: [{ type: String }]
-						},
-						blacklist: {
-							channels: [{ type: String }],
-							users: [{ type: String }],
-							roles: [{ type: String }]
-						}
-					}*/
-			},
-			botlanguage: { type: String, default: 'english' },
-			vips: {
-				roles: [{ type: String }],
-				users: [{ type: String }]
-			},
-			chatlogs: {
-				punishment: { type: String, default: 0 },
-				fnbrshop: { type: String, default: 0 }
-			}
-		},
-		redeemcodes: [GuildCodeData],
-		delays: {
-			karmausers: [{ type: String }]/*,
-			dailyusers: [{ type: String }]*/
-		},
-		profiles: [UserData]/*,
-		emblems: [EmblemData]*/
-	}));
-	console.log('[LOAD] "Mongoose: GuildDB" carregado com sucesso.')
+const GlobalUserDB = Mongoose.model('GlobalUsers', new Mongoose.Schema({
+	UserId: { type: String, required: true },
+	Fortnite: {
+		AccountId: { type: String },
+		LinkedDate: { type: Date },
+		ItemReminders: [
+			new Mongoose.Schema({
+				ReminderId: { type: Number, required: true },
+				FNItemId: { type: String, required: true },
+				Persistent: { type: Boolean, default: false },
+				DateAdded: { type: String, default: Date.now() }
+			})
+		]
+	},
+	Minecraft: {
+		Username: { type: String },
+		LinkedDate: { type: Date }
+	},
+	Xbox: {
+		Username: { type: String },
+		LinkedDate: { type: Date }
+	},
+	PlaysTation: {
+		Username: { type: String },
+		LinkedDate: { type: Date }
+	}
+}));
 
-	// Fortnite Item Reminder Data Schema
+console.log('[LOAD] Modelo GlobalUserDB carregado com sucesso.');
 
-	const FNItemReminderData = new Mongoose.Schema({
-		itemid: { type: String, required: true },
-		fnitemid: { type: String, required: true },
-		persistent: { type: Boolean, default: false },
-		created: { type: String, default: Date.now() }
-	});
-	console.log('[LOAD] "Mongoose: FNItemReminderData" carregado.');
+console.log('[TASK] Importação dos modelos da database finalizada.\n');
 
-	// Linked Services Schemas and Model
-
-	exports.UserLinksDB = new Mongoose.model("UserLinkedAccounts", Mongoose.Schema({
-		userid: { type: String },
-		fortnite: {
-			accountid: { type: String },
-			linkeddate: { type: Date },
-			itemreminders: [FNItemReminderData]
-		},
-		minecraft: {
-			username: { type: String },
-			linkeddate: { type: Date }
-		}
-	}));
-	console.log('[LOAD] "Mongoose: UserLinksDB" carregado com sucesso.')
-
-	console.log('[TASK] Importação de Schemas finalizada.\n');
+module.exports = {
+	GuildDB,
+	GlobalUserDB
 }

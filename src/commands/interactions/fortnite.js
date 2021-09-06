@@ -203,7 +203,7 @@ module.exports = {
 						.AddChoice('Italian', 'it')
 				)
 		),
-	async run({ Runtime, Interaction }) {
+	async run({ Client, Interaction }) {
 
 	}
 }

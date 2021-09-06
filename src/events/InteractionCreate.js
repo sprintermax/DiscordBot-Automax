@@ -4,19 +4,18 @@ const HandleError = require('../utils/HandleError.js');
 
 module.exports = {
 	name: 'interactionCreate',
-	async run(Runtime, Interaction) {
-		const { Client } = Runtime;
+	async run(Client, Interaction) {
 		try {
 			if (Interaction.isCommand() && Client.Commands.Interactions.has(Interaction.commandName)) {
 				await Client.Commands.Interactions.get(Interaction.commandName)
-					.run({ Runtime, Interaction });
+					.run({ Client, Interaction });
 			}
 
 			if (Interaction.isButton()) { }
 			if (Interaction.isMessageComponent()) { }
 			if (Interaction.isSelectMenu()) { }
 		} catch (Err) {
-			HandleError({ Runtime, Interaction, Err });
+			HandleError({ Client, Interaction, Err });
 		}
 	}
 }

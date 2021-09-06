@@ -2,6 +2,7 @@
 
 // WIP | TEST COMMAND
 
+const DiscordJS = require('discord.js');
 const fetch = require('node-fetch');
 
 const { UpdateComponents, FindDefaultMenuOption } = require('../../utils/MessageComponentActions.js');
@@ -42,8 +43,7 @@ module.exports = {
 			}
 		]
 	},
-	async run({ Runtime, Interaction }) {
-		const { DiscordJS, Client } = Runtime;
+	async run({ Client, Interaction }) {
 		await Interaction.deferReply();
 		const player = Interaction.options.getString('player');
 		const accountType = Interaction.options.getString('platform') || 'epic';

@@ -1,9 +1,10 @@
 'use strict';
 
-module.exports = async ({ Runtime, Err, Interaction, Message, ProgErr }) => {
+const DiscordJS = require('discord.js');
+
+module.exports = async ({ Client, Err, Interaction, Message, ProgErr }) => {
 	if (Err) try {
 		console.error('[ ERRO NA EXECUÇÃO ]\n', Err);
-		const { Client, DiscordJS } = Runtime;
 		const { guild } = Interaction || Message;
 		const ErrMsg = {
 			content: 'Ops! Ocorreu um erro inesperado.',

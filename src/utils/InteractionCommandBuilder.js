@@ -1,6 +1,6 @@
 'use strict';
 
-const { ConvertComponentType } = require('./MessageComponentActions');
+const { ConvertComponentType } = require('./MessageComponentActions.js');
 
 module.exports.Command = class Command {
 
