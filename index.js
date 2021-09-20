@@ -59,6 +59,10 @@ Mongoose.connect(process.env.MNGDB, Config.MongoDB.ConnectionOptions).then(async
 	console.log('[CONNECTION] Conectado a database com sucesso.\n');
 	try {
 		await FortniteClient.init();
+	} catch (Err) {
+		HandleError({ ProgErr: Err });
+	}
+	try {
 		await Client.login(process.env.DCTKN);
 	} catch (Err) {
 		HandleError({ ProgErr: Err });

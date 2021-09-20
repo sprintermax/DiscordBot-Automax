@@ -5,6 +5,7 @@ const DiscordJS = require('discord.js');
 const CommandBuilder = require('../../utils/InteractionCommandBuilder.js');
 
 module.exports = {
+	scope: 'global',
 	data: new CommandBuilder.Command()
 		.SetName('ping')
 		.SetDesc('Verifica a latência do Bot e do servidor'),

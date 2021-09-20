@@ -1,13 +1,22 @@
 'use strict';
 
-const DiscordJS = require('discord.js');
-const Mongoose = require('mongoose');
+const HandleError = require('../utils/HandleError.js');
 
-const Schemas = require('../database/schemas.js')
+//EVERYTHING HERE IS TEMPORARY
 
 module.exports = {
 	name: 'messageCreate',
 	async run(Client, message) {
 		//await Client.Commands.Legacy.get(message.content).run({ DiscordJS, Client, Mongoose, Schemas, message });
+
+		let CommandName = '';
+		try {
+			if (Client.Commands.Legacy.has(CommandName)) {
+				await Client.Commands.Legacy.get(CommandName)
+					.run({ Client, message, args, cmd });
+			}
+		} catch (Err) {
+			HandleError({ Client, Message: message, Err });
+		}
 	}
 }
