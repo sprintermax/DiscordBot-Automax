@@ -2,12 +2,12 @@
 
 // WIP | TEST COMMAND
 
-const DiscordJS = require('discord.js');
-const fetch = require('node-fetch');
+import DiscordJS from 'discord.js';
+import fetch from 'node-fetch';
 
-const { UpdateComponents, FindDefaultMenuOption } = require('../../utils/MessageComponentActions.js');
+import { UpdateComponents, FindDefaultMenuOption } from '../../utils/MessageComponentActions.js';
 
-module.exports = {
+export default {
 	scope: 'guild',
 	data: {
 		name: 'fnstats',

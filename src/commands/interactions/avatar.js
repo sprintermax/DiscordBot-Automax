@@ -1,18 +1,15 @@
 'use strict';
 
+import { SlashCommandBuilder } from '@discordjs/builders';
 
-const CommandBuilder = require('../../utils/InteractionCommandBuilder.js');
-
-module.exports = {
+export default {
 	scope: 'global',
-	data: new CommandBuilder.Command()
-		.SetName('avatar')
-		.SetDesc('Mostra a foto de perfil sua ou de algum usuário')
-		.AddOption(
-			new CommandBuilder.CommandOption()
-				.SetName('user')
-				.SetType('USER')
-				.SetDesc('O usuário em que a foto de perfil será exibida')
+	data: new SlashCommandBuilder()
+		.setName('avatar')
+		.setDescription('Mostra a foto de perfil sua ou de algum usuário')
+		.addUserOption((option) => option
+			.setName('user')
+			.setDescription('O usuário em que a foto de perfil será exibida')
 		),
 	async run({ Interaction }) {
 		const user = Interaction.options.getUser('user') || Interaction.user;

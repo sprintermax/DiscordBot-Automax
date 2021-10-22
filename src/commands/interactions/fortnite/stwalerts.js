@@ -1,5 +1,5 @@
 'use strict';
 
-module.exports = async ({ }) => {
+export default async ({ }) => {
 
 }

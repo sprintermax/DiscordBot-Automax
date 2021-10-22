@@ -1,8 +1,8 @@
 'use strict';
 
-const HandleError = require('../utils/HandleError.js');
+import HandleError from '../utils/HandleError.js';
 
-module.exports = {
+export default {
 	name: 'interactionCreate',
 	async run(Client, Interaction) {
 		try {

@@ -1,9 +1,9 @@
 'use strict';
 
-const FNBR = require('fnbr');
+import FNBR from 'fnbr';
 
-const Delay = require('../utils/delay.js');
-const FNCfg = require('../config.js').FNClient;
+import * as Delay from '../utils/delay.js';
+import { FNClient as FNCfg } from '../config.js';
 
 const FNClient = new FNBR.Client({
 	status: 'Use Code "Sprintermax"',
@@ -35,7 +35,7 @@ async function FriendsCheckup() {
 	}
 }
 
-module.exports = {
+export default {
 	FNClient,
 	async init() {
 		console.log('[CONNECTION] Iniciando conexão com os serviços do Fortnite.');
@@ -76,6 +76,16 @@ FNClient.on('friend:message', async (FriendMessage) => {
 	console.log(`[FNCLIENT] Mensagem Recebida de ${FriendMessage.author.displayName} | Conteúdo da Mensagem: ${FriendMessage.content}`);
 	if (FriendMessage.content.toLowerCase().startsWith('link')) {
 		await FriendMessage.author.sendMessage('test link response');
+	}
+	const args = FriendMessage.content.toLowerCase().split(' ');
+	if (args[0] == 'skin') {
+		await FNClient.party.me.setOutfit(args[1]);
+	}
+	if (args[0] == 'emote') {
+		await FNClient.party.me.setEmote(args[1]);
+	}
+	if (args[0] == 'switchhide') {
+		await FNClient.party.hideMembers(args[1]);
 	}
 });
 

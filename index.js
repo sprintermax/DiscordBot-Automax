@@ -1,15 +1,17 @@
 'use strict';
 
-require('dotenv').config();
-const DiscordJS = require('discord.js');
-const Mongoose = require('mongoose');
-const fs = require('fs');
+import dotenv from 'dotenv';
+dotenv.config();
 
-require('./src/database/schemas.js')
-const Config = require('./src/config.js');
-const HandleError = require('./src/utils/HandleError.js');
+import DiscordJS from 'discord.js';
+import Mongoose from 'mongoose';
+import fs from 'fs';
 
-const FortniteClient = require('./src/clients/fnclient.js');
+import './src/database/schemas.js';
+import * as Config from './src/config.js';
+import HandleError from './src/utils/HandleError.js';
+
+import FortniteClient from './src/clients/fnclient.js';
 const { FNClient } = FortniteClient;
 
 const Client = new DiscordJS.Client({ intents: Config.Discord.ClientIntents });
@@ -23,7 +25,7 @@ if (DiscordEvents.length > 0) {
 	console.log('[TASK] Importação dos eventos iniciada.');
 	for (const EventFile of DiscordEvents) {
 		if (!EventFile.endsWith('.js')) continue;
-		const Event = require(`./src/events/${EventFile}`);
+		const Event = await import(`./src/events/${EventFile}`).then(Event => Event.default);
 		Client.on(Event.name, Event.run.bind(null, Client));
 		console.log(`[LOAD] Evento "${Event.name}" carregado com sucesso.`);
 	}
@@ -35,7 +37,7 @@ if (InteractionCommands.length > 0) {
 	console.log('[TASK] Importação dos comandos interativos iniciada.');
 	for (const CommandFile of InteractionCommands) {
 		if (!CommandFile.endsWith('.js')) continue;
-		const Command = require(`./src/commands/interactions/${CommandFile}`);
+		const Command = await import(`./src/commands/interactions/${CommandFile}`).then(Command => Command.default);
 		Client.Commands.Interactions.set(Command.data.name, Command);
 		console.log(`[LOAD] comando interativo "${Command.data.name}" carregado com sucesso.`);
 	}
@@ -47,7 +49,7 @@ if (LegacyCommands.length > 0) {
 	console.log('[TASK] Importação dos comandos legados iniciada.');
 	for (const CommandFile of LegacyCommands) {
 		if (!CommandFile.endsWith('.js')) continue;
-		const Command = require(`./src/commands/legacy/${CommandFile}`);
+		const Command = await import(`./src/commands/legacy/${CommandFile}`).then(Command => Command.default);
 		Client.Commands.Legacy.set(Command.name, Command);
 		console.log(`[LOAD] comando legado "${Command.name}" carregado com sucesso.`);
 	}

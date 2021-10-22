@@ -1,14 +1,14 @@
 'use strict';
 
-const DiscordJS = require('discord.js');
+import DiscordJS from 'discord.js';
 
-const CommandBuilder = require('../../utils/InteractionCommandBuilder.js');
+import { SlashCommandBuilder } from '@discordjs/builders';
 
-module.exports = {
+export default {
 	scope: 'global',
-	data: new CommandBuilder.Command()
-		.SetName('ping')
-		.SetDesc('Verifica a latência do Bot e do servidor'),
+	data: new SlashCommandBuilder()
+		.setName('ping')
+		.setDescription('Verifica a latência do Bot e do servidor'),
 	async run({ Client, Interaction }) {
 		await Interaction.editReply({
 			embeds: [

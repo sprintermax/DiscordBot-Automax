@@ -1,8 +1,8 @@
 'use strict';
 
-const { Intents, Permissions } = require('discord.js');
+import { Intents, Permissions } from 'discord.js';
 
-module.exports.Discord = {
+export const Discord = {
 	ClientIntents: [
 		Intents.FLAGS.GUILDS,
 		Intents.FLAGS.GUILD_MESSAGES,
@@ -17,14 +17,14 @@ module.exports.Discord = {
 	]
 }
 
-module.exports.MongoDB = {
+export const MongoDB = {
 	ConnectionOptions: {
 		useNewUrlParser: true,
 		useUnifiedTopology: true
 	}
 }
 
-module.exports.FNClient = {
+export const FNClient = {
 	OwnerID: process.env.FNOWNR,
 	FunnyPartyEnabled: true,
 	FunnyPartyCosmetics: {

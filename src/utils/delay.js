@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports.WaitMilis = (milis) => {
+export const WaitMilis = (milis) => {
 	return new Promise(function (cb) {
 		setTimeout(cb, milis);
 	});

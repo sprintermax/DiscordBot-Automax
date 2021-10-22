@@ -1,10 +1,10 @@
 'use strict';
 
-const Mongoose = require('mongoose');
+import Mongoose from 'mongoose';
 
 console.log('[TASK] Importação dos modelos da database iniciada.');
 
-const GuildDB = Mongoose.model('Guilds', Mongoose.Schema({
+export const GuildDB = Mongoose.model('Guilds', Mongoose.Schema({
 	GuildID: { type: String, required: true },
 	Leveling: {
 		Enabled: { type: Boolean, default: false },
@@ -155,7 +155,7 @@ const GuildDB = Mongoose.model('Guilds', Mongoose.Schema({
 
 console.log('[LOAD] Modelo GuildDB carregado com sucesso.');
 
-const GlobalUserDB = Mongoose.model('GlobalUsers', new Mongoose.Schema({
+export const GlobalUserDB = Mongoose.model('GlobalUsers', new Mongoose.Schema({
 	UserId: { type: String, required: true },
 	Fortnite: {
 		AccountId: { type: String },
@@ -186,8 +186,3 @@ const GlobalUserDB = Mongoose.model('GlobalUsers', new Mongoose.Schema({
 console.log('[LOAD] Modelo GlobalUserDB carregado com sucesso.');
 
 console.log('[TASK] Importação dos modelos da database finalizada.\n');
-
-module.exports = {
-	GuildDB,
-	GlobalUserDB
-}

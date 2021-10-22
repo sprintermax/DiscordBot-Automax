@@ -1,106 +1,78 @@
 'use strict';
-const ytdl = require('ytdl-core');
-const ytsc = require('yt-search');
+import ytdl from 'ytdl-core';
+import ytsc from 'yt-search';
 
-const CommandBuilder = require('../../utils/InteractionCommandBuilder.js');
+import { SlashCommandBuilder } from '@discordjs/builders';
 
 const Queue = new Map();
 
 // Play[list] - Pause - Resume - Skip[vote] - Remove - Move - nowplaying - join - leave - queue
 //? Loop - Volume
 
-module.exports = {
+export default {
 	scope: 'guild',
-	data: new CommandBuilder.Command()
-		.SetName('song')
-		.SetDesc('Comando relacionado a reprodução de audios através do Youtube')
-		.AddOption(
-			new CommandBuilder.CommandOption()
-				.SetName('play')
-				.SetDesc('Adiciona um vídeo na lista de reprodução do bot')
-				.SetType('SUB_COMMAND')
-				.AddOption(
-					new CommandBuilder.CommandOption()
-						.SetName('video')
-						.SetDesc('Link do vídeo, playlist ou texto para busca')
-						.SetType('STRING')
-						.SetAsRequired()
-				)
+	data: new SlashCommandBuilder()
+		.setName('song')
+		.setDescription('Comando relacionado a reprodução de audios através do Youtube')
+		.addSubcommand((subcmd) => subcmd
+			.setName('play')
+			.setDescription('Adiciona um vídeo na lista de reprodução do bot')
+			.addStringOption((option) => option
+				.setName('video')
+				.setDescription('Link do vídeo, playlist ou texto para busca')
+				.setRequired(true)
+			)
 		)
-		.AddOption(
-			new CommandBuilder.CommandOption()
-				.SetName('pause')
-				.SetDesc('Pausa a reprodução do bot')
-				.SetType('SUB_COMMAND')
+		.addSubcommand((subcmd) => subcmd
+			.setName('pause')
+			.setDescription('Pausa a reprodução do bot')
 		)
-		.AddOption(
-			new CommandBuilder.CommandOption()
-				.SetName('resume')
-				.SetDesc('Retoma a reprodução do bot')
-				.SetType('SUB_COMMAND')
+		.addSubcommand((subcmd) => subcmd
+			.setName('resume')
+			.setDescription('Retoma a reprodução do bot')
 		)
-		.AddOption(
-			new CommandBuilder.CommandOption()
-				.SetName('skip')
-				.SetDesc('Pula o que está em reprodução no momento')
-				.SetType('SUB_COMMAND')
+		.addSubcommand((subcmd) => subcmd
+			.setName('skip')
+			.setDescription('Pula o que está em reprodução no momento')
 		)
-		.AddOption(
-			new CommandBuilder.CommandOption()
-				.SetName('remove')
-				.SetDesc('Remove algum item da lista de reprodução')
-				.SetType('SUB_COMMAND')
-				.AddOption(
-					new CommandBuilder.CommandOption()
-						.SetName('id')
-						.SetDesc('Posição do vídeo na lista de reprodução a ser removido')
-						.SetType('INTEGER')
-						.SetAsRequired()
-				)
+		.addSubcommand((subcmd) => subcmd
+			.setName('remove')
+			.setDescription('Remove algum item da lista de reprodução')
+			.addIntegerOption((option) => option
+				.setName('id')
+				.setDescription('Posição do vídeo na lista de reprodução a ser removido')
+				.setRequired(true)
+			)
 		)
-		.AddOption(
-			new CommandBuilder.CommandOption()
-				.SetName('queue')
-				.SetDesc('Mostra a lista de reprodução atual')
-				.SetType('SUB_COMMAND')
+		.addSubcommand((subcmd) => subcmd
+			.setName('queue')
+			.setDescription('Mostra a lista de reprodução atual')
 		)
-		.AddOption(
-			new CommandBuilder.CommandOption()
-				.SetName('move')
-				.SetDesc('Altera a posição de um vídeo da lista de reprodução')
-				.SetType('SUB_COMMAND')
-				.AddOption(
-					new CommandBuilder.CommandOption()
-						.SetName('from')
-						.SetDesc('ID do vídeo na playlist a ser movido')
-						.SetType('INTEGER')
-						.SetAsRequired()
-				)
-				.AddOption(
-					new CommandBuilder.CommandOption()
-						.SetName('to')
-						.SetDesc('Posição na playlist em que o vídeo irá ficar')
-						.SetType('INTEGER')
-						.SetAsRequired()
-				)
+		.addSubcommand((subcmd) => subcmd
+			.setName('move')
+			.setDescription('Altera a posição de um vídeo da lista de reprodução')
+			.addIntegerOption((option) => option
+				.setName('from')
+				.setDescription('ID do vídeo na playlist a ser movido')
+				.setRequired(true)
+			)
+			.addIntegerOption((option) => option
+				.setName('to')
+				.setDescription('Posição na playlist em que o vídeo irá ficar')
+				.setRequired(true)
+			)
 		)
-		.AddOption(
-			new CommandBuilder.CommandOption()
-				.SetName('join')
-				.SetDesc('Entra no chat de voz que você está ou que foi especificado')
-				.SetType('SUB_COMMAND')
-				.AddOption(
-					new CommandBuilder.CommandOption()
-						.SetName('channel')
-						.SetDesc('ID do vídeo na playlist a ser movido')
-						.SetType('CHANNEL')
-				)
+		.addSubcommand((subcmd) => subcmd
+			.setName('join')
+			.setDescription('Entra no chat de voz que você está ou que foi especificado')
+			.addChannelOption((option) => option
+				.setName('channel')
+				.setDescription('Canal de voz para o bot entrar')
+			)
 		)
-		.AddOption(
-			new CommandBuilder.CommandOption()
-				.SetName('leave')
-				.SetDesc('Sai do chat de voz atual se o bot estiver em um')
-				.SetType('SUB_COMMAND')
+		.addSubcommand((subcmd) => subcmd
+			.setName('leave')
+			.setDescription('Sai do chat de voz atual se o bot estiver em um')
 		),
 	async run({ Client, Interaction }) {
 		const VoiceChannel = Interaction.options.getChannel('channel') || Interaction.member.voice.channel;

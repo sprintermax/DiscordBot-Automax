@@ -1,8 +1,8 @@
 'use strict';
 
-const DiscordJS = require('discord.js');
+import DiscordJS from 'discord.js';
 
-module.exports = async ({ Client, Err, Interaction, Message, ProgErr }) => {
+export default async ({ Client, Err, Interaction, Message, ProgErr }) => {
 	if (Err) try {
 		console.error('[ ERRO NA EXECUÇÃO ]\n', Err);
 		const { guild } = Interaction || Message;

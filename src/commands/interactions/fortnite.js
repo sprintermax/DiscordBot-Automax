@@ -1,207 +1,171 @@
 'use strict';
 
-const CommandBuilder = require('../../utils/InteractionCommandBuilder.js');
+import { SlashCommandBuilder } from '@discordjs/builders';
 
 // WIP | TEST COMMAND
 
-module.exports = {
+export default {
 	scope: 'global',
-	data: new CommandBuilder.Command()
-		.SetName('fortnite')
-		.SetDesc('Comando para interações relacionadas ao Fortnite')
-		.AddOption(
-			new CommandBuilder.CommandOption()
-				.SetName('account')
-				.SetDesc('Conexão da sua conta do Fortnite com o Bot')
-				.SetType('SUB_COMMAND_GROUP')
-				.AddOption(
-					new CommandBuilder.CommandOption()
-						.SetName('info')
-						.SetDesc('Mostra informações sobre a conexão entre as contas')
-						.SetType('SUB_COMMAND')
+	data: new SlashCommandBuilder()
+		.setName('fortnite')
+		.setDescription('Comando para interações relacionadas ao Fortnite')
+		.addSubcommandGroup((group) => group
+			.setName('account')
+			.setDescription('Conexão da sua conta do Fortnite com o Bot')
+			.addSubcommand((subcmd) => subcmd
+				.setName('info')
+				.setDescription('Mostra informações sobre a conexão entre as contas')
+			)
+			.addSubcommand((subcmd) => subcmd
+				.setName('link')
+				.setDescription('Conecta uma conta do Fortnite com seu usuário do Discord no Bot')
+				.addStringOption((option) => option
+					.setName('nick')
+					.setDescription('Seu Apelido da Epic Games')
+					.setRequired(true)
 				)
-				.AddOption(
-					new CommandBuilder.CommandOption()
-						.SetName('link')
-						.SetDesc('Conecta uma conta do Fortnite com seu usuário do Discord no Bot')
-						.SetType('SUB_COMMAND')
-						.AddOption(
-							new CommandBuilder.CommandOption()
-								.SetName('nick')
-								.SetDesc('Seu Apelido da Epic Games')
-								.SetType('STRING')
-								.SetAsRequired()
-						)
-				)
-				.AddOption(
-					new CommandBuilder.CommandOption()
-						.SetName('unlink')
-						.SetDesc('Desconecta a conta do Fortnite do seu Usuário no Bot')
-						.SetType('SUB_COMMAND')
-				)
+			)
+			.addSubcommand((subcmd) => subcmd
+				.setName('unlink')
+				.setDescription('Desconecta a conta do Fortnite do seu Usuário no Bot')
+			)
 		)
-		.AddOption(
-			new CommandBuilder.CommandOption()
-				.SetName('stats')
-				.SetDesc('Veja estatísticas do Fortnite suas ou de outros jogadores')
-				.SetType('SUB_COMMAND')
-				.AddOption(
-					new CommandBuilder.CommandOption()
-						.SetName('nick')
-						.SetDesc('Seu Apelido no Fortnite')
-						.SetType('STRING')
-				)
-				.AddOption(
-					new CommandBuilder.CommandOption()
-						.SetName('platform')
-						.SetDesc('Especifique sua plataforma caso seu apelido não seja da Epic Games')
-						.SetType('STRING')
-						.AddChoice('Xbox', 'xbl')
-						.AddChoice('Playstation', 'psn')
-				)
+		.addSubcommand((subcmd) => subcmd
+			.setName('stats')
+			.setDescription('Veja estatísticas do Fortnite suas ou de outros jogadores')
+			.addStringOption((option) => option
+				.setName('nick')
+				.setDescription('Apelido no Fortnite')
+			)
+			.addStringOption((option) => option
+				.setName('platform')
+				.setDescription('Especifique sua plataforma caso seu apelido não seja da Epic Games')
+				.addChoices([
+					['Xbox', 'xbl'],
+					['Playstation', 'psn']
+				])
+			)
 		)
-		.AddOption(
-			new CommandBuilder.CommandOption()
-				.SetName('reminder')
-				.SetDesc('Gerencia lembretes para ser notificado quando um item estiver na loja de Itens')
-				.SetType('SUB_COMMAND_GROUP')
-				.AddOption(
-					new CommandBuilder.CommandOption()
-						.SetName('list')  // usar o resultado do comando /fortnite cosmetic para adicionar um item. com opção de persistente ou não
-						.SetDesc('Mostra os itens atualmente na sua lista de lembretes')
-						.SetType('SUB_COMMAND')
+		.addSubcommandGroup((group) => group
+			.setName('reminder')
+			.setDescription('Gerencia lembretes para ser notificado quando um item estiver na loja de Itens')
+			.addSubcommand((subcmd) => subcmd
+				.setName('list')
+				.setDescription('Mostra os itens atualmente na sua lista de lembretes')
+			)
+			.addSubcommand((subcmd) => subcmd
+				.setName('remove')
+				.setDescription('Remove um item da sua lista de lembretes')
+				.addStringOption((option) => option
+					.setName('id')
+					.setDescription('ID do Item da lista de lembretes')
+					.setRequired(true)
 				)
-				.AddOption(
-					new CommandBuilder.CommandOption()
-						.SetName('remove')
-						.SetDesc('Remove um item da sua lista de lembretes')
-						.SetType('SUB_COMMAND')
-						.AddOption(
-							new CommandBuilder.CommandOption()
-								.SetName('id')
-								.SetDesc('ID do Item da lista de lembretes')
-								.SetType('STRING')
-								.SetAsRequired()
-						)
-				)
+			)
 		)
-		.AddOption(
-			new CommandBuilder.CommandOption()
-				.SetName('brshop')
-				.SetDesc('Mostra uma imagem da Loja de Itens atual do Fortnite')
-				.SetType('SUB_COMMAND')
-				.AddOption(
-					new CommandBuilder.CommandOption()
-						.SetName('lang')
-						.SetDesc('Caso você não queira a loja exibida em Português, espeficique um idioma')
-						.SetType('STRING')
-						.AddChoice('English', 'en')
-						.AddChoice('Spanish', 'es')
-						.AddChoice('French', 'fr')
-						.AddChoice('Italian', 'it')
-				)
+		.addSubcommand((subcmd) => subcmd
+			.setName('brshop')
+			.setDescription('Mostra uma imagem da Loja de Itens atual do Fortnite')
+			.addStringOption((option) => option
+				.setName('lang')
+				.setDescription('Caso você não queira a loja exibida em Português, espeficique um idioma')
+				.addChoices([
+					['English', 'en'],
+					['Spanish', 'es'],
+					['French', 'fr'],
+					['Italian', 'it']
+				])
+			)
 		)
-		.AddOption(
-			new CommandBuilder.CommandOption()
-				.SetName('cosmetic')
-				.SetDesc('Procura e exibe informações sobre algum item do Fortnite de acordo com os critérios de busca')
-				.SetType('SUB_COMMAND')
-				.AddOption(
-					new CommandBuilder.CommandOption()
-						.SetName('name')
-						.SetDesc('O Nome do Item em Português ou Inglês para pesquisar')
-						.SetType('STRING')
-				)
-				.AddOption(
-					new CommandBuilder.CommandOption()
-						.SetName('id')
-						.SetDesc('ID do Item para pesquisar')
-						.SetType('STRING')
-				)
-				.AddOption(
-					new CommandBuilder.CommandOption()
-						.SetName('description')
-						.SetDesc('A Descrição do Item em Português ou Inglês para pesquisar')
-						.SetType('STRING')
-				)
-				.AddOption(
-					new CommandBuilder.CommandOption()
-						.SetName('set')
-						.SetDesc('O Conjunto do Item em Português ou Inglês para pesquisar')
-						.SetType('STRING')
-				)
-				.AddOption(
-					new CommandBuilder.CommandOption()
-						.SetName('method')
-						.SetDesc('Por padrão o método de procura do item é "Contém", caso queira procurar de outro jeito, especifique')
-						.SetType('STRING')
-						.AddChoice('Full Match', 'full')
-						.AddChoice('Starts With', 'starts')
-						.AddChoice('Ends With', 'ends')
-				)
-				.AddOption(
-					new CommandBuilder.CommandOption()
-						.SetName('type')
-						.SetDesc('Filtra a busca de itens por tipo')
-						.SetType('STRING')
-						.AddChoice('Outfit', 'outfit')
-						.AddChoice('Emote', 'emote')
-						.AddChoice('Glider', 'glider')
-						.AddChoice('Harvest Tool', 'pickaxe')
-						.AddChoice('Wrap', 'wrap')
-						.AddChoice('Contrail', 'contrail')
-						.AddChoice('Toy', 'toy')
-						.AddChoice('Banner', 'banner')
-						.AddChoice('Emoji', 'emoji')
-						.AddChoice('Spray', 'spray')
-						.AddChoice('Pet Carrier', 'petcarrier')
-						.AddChoice('Loading Screen', 'loadingscreen')
-						.AddChoice('Music', 'music')
-				)
-				.AddOption(
-					new CommandBuilder.CommandOption()
-						.SetName('rarity')
-						.SetDesc('Filtra a busca de itens por raridade')
-						.SetType('STRING')
-						.AddChoice('Common', 'common')
-						.AddChoice('Rare', 'rare')
-						.AddChoice('Epic', 'epic')
-						.AddChoice('Legendary', 'legendary')
-						.AddChoice('Exotic', 'exotic')
-						.AddChoice('Mythic', 'mythic')
-				)
-				.AddOption(
-					new CommandBuilder.CommandOption()
-						.SetName('serie')
-						.SetDesc('Filtra a busca de itens por série')
-						.SetType('STRING')
-						.AddChoice('Star Wars', 'starwars')
-						.AddChoice('Icon', 'icon')
-						.AddChoice('Dark', 'cube')
-						.AddChoice('DC', 'dc')
-						.AddChoice('Marvel', 'marvel')
-						.AddChoice('Frozen', 'frozen')
-						.AddChoice('Lava', 'lava')
-						.AddChoice('Game Legends', 'game')
-						.AddChoice('Slurp', 'slurp')
-						.AddChoice('Shadow', 'shadow')
-				)
+		.addSubcommand((subcmd) => subcmd
+			.setName('cosmetic')
+			.setDescription('Procura e exibe informações sobre algum item do Fortnite de acordo com os critérios de busca')
+			.addStringOption((option) => option
+				.setName('name')
+				.setDescription('O Nome do Item em Português ou Inglês para pesquisar')
+			)
+			.addStringOption((option) => option
+				.setName('id')
+				.setDescription('ID do Item para pesquisar')
+			)
+			.addStringOption((option) => option
+				.setName('description')
+				.setDescription('A Descrição do Item em Português ou Inglês para pesquisar')
+			)
+			.addStringOption((option) => option
+				.setName('set')
+				.setDescription('O Conjunto do Item em Português ou Inglês para pesquisar')
+			)
+			.addStringOption((option) => option
+				.setName('method')
+				.setDescription('Por padrão o método de procura do item é "Contém", caso queira procurar de outro jeito, especifique')
+				.addChoices([
+					['Full Match', 'full'],
+					['Starts With', 'starts'],
+					['Ends With', 'ends']
+				])
+			)
+			.addStringOption((option) => option
+				.setName('type')
+				.setDescription('Filtra a busca de itens por tipo')
+				.addChoices([
+					['Outfit', 'outfit'],
+					['Emote', 'emote'],
+					['Glider', 'glider'],
+					['Harvest Tool', 'pickaxe'],
+					['Wrap', 'wrap'],
+					['Contrail', 'contrail'],
+					['Toy', 'toy'],
+					['Banner', 'banner'],
+					['Emoji', 'emoji'],
+					['Spray', 'spray'],
+					['Pet Carrier', 'petcarrier'],
+					['Loading Screen', 'loadingscreen'],
+					['Music', 'music']
+				])
+			)
+			.addStringOption((option) => option
+				.setName('rarity')
+				.setDescription('Filtra a busca de itens por raridade')
+				.addChoices([
+					['Common', 'common'],
+					['Rare', 'rare'],
+					['Epic', 'epic'],
+					['Legendary', 'legendary'],
+					['Exotic', 'exotic'],
+					['Mythic', 'mythic']
+				])
+			)
+			.addStringOption((option) => option
+				.setName('serie')
+				.setDescription('Filtra a busca de itens por série')
+				.addChoices([
+					['Star Wars', 'starwars'],
+					['Icon', 'icon'],
+					['Dark', 'cube'],
+					['DC', 'dc'],
+					['Marvel', 'marvel'],
+					['Frozen', 'frozen'],
+					['Lava', 'lava'],
+					['Game Legends', 'game'],
+					['Slurp', 'slurp'],
+					['Shadow', 'shadow']
+				])
+			)
 		)
-		.AddOption(
-			new CommandBuilder.CommandOption()
-				.SetName('stwalerts')
-				.SetDesc('Mostra uma imagem com os principais alertas do Salve o Mundo')
-				.SetType('SUB_COMMAND')
-				.AddOption(
-					new CommandBuilder.CommandOption()
-						.SetName('lang')
-						.SetDesc('Espeficique um idioma caso você não queira uma resposta em Português')
-						.SetType('STRING')
-						.AddChoice('English', 'en')
-						.AddChoice('Spanish', 'es')
-						.AddChoice('French', 'fr')
-						.AddChoice('Italian', 'it')
-				)
+		.addSubcommand((subcmd) => subcmd
+			.setName('stwalerts')
+			.setDescription('Mostra uma imagem com os principais alertas do Salve o Mundo')
+			.addStringOption((option) => option
+				.setName('lang')
+				.setDescription('Espeficique um idioma caso você não queira uma resposta em Português')
+				.addChoices([
+					['English', 'en'],
+					['Spanish', 'es'],
+					['French', 'fr'],
+					['Italian', 'it']
+				])
+			)
 		),
 	async run({ Client, Interaction }) {
 

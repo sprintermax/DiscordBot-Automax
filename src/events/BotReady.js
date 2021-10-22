@@ -1,8 +1,8 @@
 'use strict';
 
-const Config = require('../config.js');
+import * as Config from '../config.js';
 
-module.exports = {
+export default {
 	name: 'ready',
 	run(Client) {
 		console.log(`[CONNECTION] O Bot está online em ${Client.guilds.cache.size} servidor${Client.guilds.cache.size > 1 ? 'es' : ''} pelo usuário "${Client.user.tag}" (${Client.user.id})\n`);

@@ -1,10 +1,10 @@
 'use strict';
 
-const HandleError = require('../utils/HandleError.js');
+import HandleError from '../utils/HandleError.js';
 
 //EVERYTHING HERE IS TEMPORARY
 
-module.exports = {
+export default {
 	name: 'messageCreate',
 	async run(Client, message) {
 		//await Client.Commands.Legacy.get(message.content).run({ DiscordJS, Client, Mongoose, Schemas, message });
