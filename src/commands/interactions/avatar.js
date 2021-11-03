@@ -13,6 +13,6 @@ export default {
 		),
 	async run({ Interaction }) {
 		const user = Interaction.options.getUser('user') || Interaction.user;
-		await Interaction.reply({ files: [user.avatarURL({ dynamic: true, size: 2048 })] });
+		await Interaction.reply({ files: [user.displayAvatarURL({ dynamic: true, size: 2048 })] });
 	}
 }

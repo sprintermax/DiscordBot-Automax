@@ -10,7 +10,7 @@ export default {
 		.setName('ping')
 		.setDescription('Verifica a latência do Bot e do servidor'),
 	async run({ Client, Interaction }) {
-		await Interaction.editReply({
+		await Interaction.reply({
 			embeds: [
 				new DiscordJS.MessageEmbed()
 					.setTitle('🏓 Pong!')
