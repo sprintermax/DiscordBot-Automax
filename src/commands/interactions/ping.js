@@ -5,7 +5,7 @@ import DiscordJS from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 
 export default {
-	scope: 'global',
+	auto_update: false,
 	data: new SlashCommandBuilder()
 		.setName('ping')
 		.setDescription('Verifica a latência do Bot e do servidor'),

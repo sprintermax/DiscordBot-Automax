@@ -10,7 +10,7 @@ const Queue = new Map();
 //? Loop - Volume
 
 export default {
-	scope: 'guild',
+	auto_update: false,
 	data: new SlashCommandBuilder()
 		.setName('song')
 		.setDescription('Comando relacionado a reprodução de audios através do Youtube')

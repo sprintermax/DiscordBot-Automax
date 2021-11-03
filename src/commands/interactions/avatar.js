@@ -3,7 +3,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 
 export default {
-	scope: 'global',
+	auto_update: false,
 	data: new SlashCommandBuilder()
 		.setName('avatar')
 		.setDescription('Mostra a foto de perfil sua ou de algum usuário')

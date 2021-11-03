@@ -5,7 +5,7 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 // WIP | TEST COMMAND
 
 export default {
-	scope: 'global',
+	auto_update: false,
 	data: new SlashCommandBuilder()
 		.setName('fortnite')
 		.setDescription('Comando para interações relacionadas ao Fortnite')
