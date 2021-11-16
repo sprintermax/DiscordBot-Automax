@@ -5,6 +5,7 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 // WIP | TEST COMMAND
 
 export default {
+	enabled: false,
 	auto_update: false,
 	data: new SlashCommandBuilder()
 		.setName('fortnite')

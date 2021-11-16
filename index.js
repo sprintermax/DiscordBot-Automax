@@ -59,8 +59,8 @@ if (LegacyCommands.length > 0) {
 	for (const CommandFile of LegacyCommands) {
 		if (!CommandFile.endsWith('.js')) continue;
 		const Command = await import(`./src/commands/legacy/${CommandFile}`).then(Command => Command.default);
-		Client.Commands.Legacy.set(Command.name, Command);
-		console.log(`[LOAD] Comando legado "${Command.name}" carregado com sucesso.`);
+		Client.Commands.Legacy.set(Command.data.name, Command);
+		console.log(`[LOAD] Comando legado "${Command.data.name}" carregado com sucesso.`);
 	}
 	console.log('[TASK] Importação dos Comandos legados finalizada.\n');
 } else console.log('[INFO] Nenhum comando legado encontrado.\n');

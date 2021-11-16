@@ -5,6 +5,7 @@ import DiscordJS from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 
 export default {
+	enabled: true,
 	auto_update: false,
 	data: new SlashCommandBuilder()
 		.setName('ping')

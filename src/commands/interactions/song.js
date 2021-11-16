@@ -10,6 +10,7 @@ const Queue = new Map();
 //? Loop - Volume
 
 export default {
+	enabled: false,
 	auto_update: false,
 	data: new SlashCommandBuilder()
 		.setName('song')

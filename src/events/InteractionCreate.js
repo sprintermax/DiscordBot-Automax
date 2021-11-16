@@ -7,8 +7,12 @@ export default {
 	async run(Client, Interaction) {
 		try {
 			if (Interaction.isCommand() && Client.Commands.Interactions.has(Interaction.commandName)) {
-				await Client.Commands.Interactions.get(Interaction.commandName)
-					.run({ Client, Interaction });
+				const Command = await Client.Commands.Interactions.get(Interaction.commandName);
+				if (Command.enabled) Command.run({ Client, Interaction });
+				else await Interaction.reply({
+					content: 'Esse comando está indisponível no momento.',
+					ephemeral: true
+				});
 			}
 
 			if (Interaction.isButton()) { }

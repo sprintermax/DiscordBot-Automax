@@ -3,6 +3,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 
 export default {
+	enabled: true,
 	auto_update: false,
 	data: new SlashCommandBuilder()
 		.setName('avatar')
