@@ -23,23 +23,12 @@ if (DiscordEvents.length > 0) {
 	for (const EventFile of DiscordEvents) {
 		if (!EventFile.endsWith('.js')) continue;
 		const Event = await import(`./src/events/${EventFile}`).then(Event => Event.default);
+		if (Event.runOnce) Client.once(Event.name, Event.runOnce.bind(null, Client));
 		Client.on(Event.name, Event.run.bind(null, Client));
 		console.log(`[LOAD] Evento "${Event.name}" carregado com sucesso.`);
 	}
 	console.log('[TASK] Importação dos eventos finalizada.\n');
 } else console.log('[INFO] Nenhum evento encontrado.\n');
-
-const DiscordOnceEvents = fs.existsSync('./src/events/once/') ? fs.readdirSync('./src/events/once/') : [];
-if (DiscordOnceEvents.length > 0) {
-	console.log('[TASK] Importação dos eventos de execução única iniciada.');
-	for (const EventFile of DiscordOnceEvents) {
-		if (!EventFile.endsWith('.js')) continue;
-		const Event = await import(`./src/events/once/${EventFile}`).then(Event => Event.default);
-		Client.once(Event.name, Event.run.bind(null, Client));
-		console.log(`[LOAD] Evento de execução única "${Event.name}" carregado com sucesso.`);
-	}
-	console.log('[TASK] Importação dos eventos de execução única finalizada.\n');
-} else console.log('[INFO] Nenhum evento de execução única encontrado.\n');
 
 const InteractionCommands = fs.existsSync('./src/commands/interactions/') ? fs.readdirSync('./src/commands/interactions/') : [];
 if (InteractionCommands.length > 0) {
