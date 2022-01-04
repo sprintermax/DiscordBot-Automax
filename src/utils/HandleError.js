@@ -2,10 +2,10 @@
 
 import DiscordJS from 'discord.js';
 
-export default async ({ Client, Err, Interaction, Message, ProgErr }) => {
+export default async ({ Client, Err, Interaction, message, ProgErr }) => {
 	if (Err) try {
 		console.error('[ ERRO NA EXECUÇÃO ]\n', Err);
-		const { guild } = Interaction || Message;
+		const { guild } = Interaction || message;
 		const ErrMsg = {
 			content: 'Ops! Ocorreu um erro inesperado.',
 			ephemeral: true,
@@ -29,7 +29,7 @@ export default async ({ Client, Err, Interaction, Message, ProgErr }) => {
 			if (Interaction.isButton()) { }
 			if (Interaction.isMessageComponent()) { }
 			if (Interaction.isSelectMenu()) { }
-		} else if (Message) {
+		} else if (message) {
 
 		}
 	} catch (ProgramErr) {

@@ -1,0 +1,53 @@
+'use strict';
+
+import { SlashCommandBuilder } from '@discordjs/builders';
+
+import ConfigPages from './config/pages.js';
+
+// WIP | TEST COMMAND
+
+export default {
+	enabled: true,
+	auto_update: false,
+	data: new SlashCommandBuilder()
+		.setName('config')
+		.setDescription('Configuração geral do Bot no Servidor'),
+	async run({ Client, Interaction }) {
+		const cmdCache = {
+			current_page: 'pgOne'
+		}
+
+		await Interaction.deferReply();
+
+		const msg = await Interaction.editReply({
+			embeds: [
+				ConfigPages.find(page => page.pageid == cmdCache.current_page).embed
+					.setFooter(`${Interaction.guild?.name || Client.user.username}`, Interaction.guild?.iconURL() || Client.user.avatarURL() || '')
+					.setTimestamp()
+			],
+			components: ConfigPages.find(page => page.pageid == cmdCache.current_page).components
+		});
+
+
+
+		const ICollector = msg.createMessageComponentCollector({ idle: 60000 });
+
+		ICollector.on('collect', async i => {
+			if (i.user.id !== Interaction.user.id) return i.reply({ content: 'Você não pode alterar opções do comando de outro usuário.', ephemeral: true });
+
+			cmdCache.current_page = i.customId;
+
+			await i.update({
+				embeds: [
+					ConfigPages.find(page => page.pageid == i.customId).embed
+						.setFooter(`${Interaction.guild?.name || Client.user.username}`, Interaction.guild?.iconURL() || Client.user.avatarURL() || '')
+						.setTimestamp()
+				],
+				components: ConfigPages.find(page => page.pageid == i.customId).components
+			});
+		});
+		ICollector.on('end', (c, r) => {
+			if (r !== 'messageDelete') Interaction.editReply({ components: [] });
+		});
+	}
+}

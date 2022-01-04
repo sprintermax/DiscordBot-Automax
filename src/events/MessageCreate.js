@@ -9,14 +9,16 @@ export default {
 	async run(Client, message) {
 		//await Client.Commands.Legacy.get(message.content).run({ DiscordJS, Client, Mongoose, Schemas, message });
 
-		let CommandName = '';
+		let CommandName = message.content;
+		let cmd = ''
+		let args = ''
 		try {
 			if (Client.Commands.Legacy.has(CommandName)) {
 				await Client.Commands.Legacy.get(CommandName)
 					.run({ Client, message, args, cmd });
 			}
 		} catch (Err) {
-			HandleError({ Client, Message: message, Err });
+			HandleError({ Client, message, Err });
 		}
 	}
 }
